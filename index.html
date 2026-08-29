@@ -152,6 +152,19 @@ header.top{
 .pay-box .steps{list-style:decimal;padding-left:18px;margin-top:10px;}
 .pay-box .steps li{margin-bottom:6px;}
 
+.amt-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.amt-tab{
+  flex:1 1 auto;min-width:120px;padding:9px 10px;border:1.5px solid var(--line);
+  border-radius:10px;background:#fff;cursor:pointer;font-family:'Space Grotesk';
+  font-size:13px;font-weight:700;color:var(--ink);text-align:center;line-height:1.5;
+  transition:border-color .15s,background .15s;
+}
+.amt-tab span{display:block;font-family:'Manrope';font-size:11px;font-weight:600;color:var(--muted);margin-top:2px;}
+.amt-tab:hover{border-color:var(--teal);}
+.amt-tab.active{border-color:var(--teal);background:#e2efe9;color:var(--teal-deep);}
+.amt-tab.active span{color:var(--teal-deep);}
+.amt-note{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;}
+
 /* ---------- install steps ---------- */
 .install{padding:70px 0;background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
 .install h2{font-size:28px;margin-bottom:8px;}
@@ -270,10 +283,9 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
     <div class="feat-grid">
       <div class="feat"><div class="num">01</div><h3>KSK người lớn (M12–M14)</h3><p>Điền nhanh thị lực, thính lực, khám lâm sàng, hỏi bệnh người cao tuổi và kết luận thường gặp.</p></div>
       <div class="feat"><div class="num">02</div><h3>KSK trẻ em dưới 6 tuổi</h3><p>Tự động điền thông tin hành chính, tiền sử, hình thức chi trả và địa điểm khám theo đúng hợp đồng trường học.</p></div>
-      <div class="feat"><div class="num">03</div><h3>Chọn ảnh tự động</h3><p>Trỏ sẵn thư mục ảnh, script tự tìm và gắn đúng ảnh cho từng phiếu (bản đầy đủ).</p></div>
-      <div class="feat"><div class="num">04</div><h3>Xác nhận đã chọn đúng</h3><p>Không chỉ bấm — script kiểm tra lại trạng thái tick/chọn trước khi coi là hoàn tất, tránh báo thành công giả.</p></div>
-      <div class="feat"><div class="num">05</div><h3>Tự thử lại khi mạng chậm</h3><p>Danh sách xổ xuống tải bất đồng bộ vẫn được xử lý ổn định nhờ cơ chế tự thử lại trong vài giây.</p></div>
-      <div class="feat"><div class="num">06</div><h3>Cập nhật tự động</h3><p>Luôn dùng đúng bản mới nhất qua Tampermonkey, không cần cài lại thủ công mỗi lần nâng cấp.</p></div>
+      <div class="feat"><div class="num">03</div><h3>Xác nhận đã chọn đúng</h3><p>Không chỉ bấm — script kiểm tra lại trạng thái tick/chọn trước khi coi là hoàn tất, tránh báo thành công giả.</p></div>
+      <div class="feat"><div class="num">04</div><h3>Tự thử lại khi mạng chậm</h3><p>Danh sách xổ xuống tải bất đồng bộ vẫn được xử lý ổn định nhờ cơ chế tự thử lại trong vài giây.</p></div>
+      <div class="feat"><div class="num">05</div><h3>Cập nhật tự động</h3><p>Luôn dùng đúng bản mới nhất qua Tampermonkey, không cần cài lại thủ công mỗi lần nâng cấp.</p></div>
     </div>
   </div>
 </section>
@@ -322,7 +334,22 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
         <button class="btn btn-primary" onclick="document.getElementById('buyBox').classList.toggle('open')">💳 Nạp ngay</button>
         <div class="pay-box" id="buyBox">
           <b>Bước 1.</b> Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") — popup hiện sẵn <b>Mã máy</b> và số tài khoản nhận tiền đã điền sẵn, không cần gõ tay.
-          <img src="https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=100000&addInfo=MID-A1B2C3D4" alt="QR chuyển khoản minh hoạ" onerror="this.style.display='none'">
+          <div class="amt-tabs" role="tablist" aria-label="Chọn mức nạp">
+            <button type="button" class="amt-tab active" data-amt="100000" onclick="mttSetAmt(this)">100.000đ<span>100 Medi</span></button>
+            <button type="button" class="amt-tab" data-amt="500000" onclick="mttSetAmt(this)">500.000đ<span>525 Medi (+5%)</span></button>
+            <button type="button" class="amt-tab" data-amt="1000000" onclick="mttSetAmt(this)">1.000.000đ<span>1.100 Medi (+10%)</span></button>
+            <button type="button" class="amt-tab" data-amt="2000000" onclick="mttSetAmt(this)">2.000.000đ<span>2.300 Medi (+15%)</span></button>
+          </div>
+          <img id="mttQrImg" src="https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=100000&addInfo=MID-A1B2C3D4" alt="QR chuyển khoản minh hoạ" onerror="this.style.display='none'">
+          <div class="amt-note">QR minh hoạ theo số tiền đã chọn — khi chuyển khoản thật, nhớ đổi nội dung sang đúng <b>Mã máy</b> của bạn hiện trong popup Ví Medi.</div>
+          <script>
+            function mttSetAmt(btn){
+              document.querySelectorAll('.amt-tab').forEach(function(b){ b.classList.remove('active'); });
+              btn.classList.add('active');
+              var img = document.getElementById('mttQrImg');
+              img.src = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + btn.dataset.amt + '&addInfo=MID-A1B2C3D4';
+            }
+          </script>
           <ol class="steps">
             <li>Chuyển khoản đúng số tiền muốn nạp (tối thiểu 100.000đ), nội dung ghi đúng <b>Mã máy</b> hiện trong popup (VD: <code>MID-A1B2C3D4</code>)</li>
             <li>Hệ thống tự động nhận diện giao dịch và cộng Medi ngay — thường chỉ vài giây đến vài phút, không cần nhắn Zalo hay chờ Admin xác nhận</li>
