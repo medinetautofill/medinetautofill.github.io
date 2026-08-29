@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Medinet Autofill — Điền phiếu khám sức khoẻ tự động</title>
-<meta name="description" content="Công cụ tự động điền phiếu Khám sức khỏe trên hệ thống Medinet HCM. Dùng thử 24h miễn phí, 490.000đ/tháng dùng không giới hạn.">
+<meta name="description" content="Công cụ tự động điền phiếu Khám sức khỏe trên hệ thống Medinet HCM. Dùng thử miễn phí 5 Medi, nạp Medi dùng bao nhiêu trả bấy nhiêu.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -223,7 +223,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
       <h1>Điền phiếu khám sức khoẻ <em>nhanh gấp 10 lần</em>, không cần gõ tay</h1>
       <p class="lead">Tiện ích trình duyệt giúp nhân viên y tế điền tự động các mục lặp lại trong phiếu KSK người lớn và trẻ em dưới 6 tuổi — chỉ 1 cú bấm cho mỗi mục thay vì hàng chục thao tác chuột.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#gia">⏳ Dùng thử 24 giờ — miễn phí</a>
+        <a class="btn btn-primary" href="#gia">⏳ Dùng thử miễn phí — 5 Medi</a>
         <a class="btn btn-ghost" href="#cai-dat">Xem cách cài đặt</a>
       </div>
       <div class="trust-row">
@@ -280,56 +280,65 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
 
 <section class="pricing" id="gia">
   <div class="wrap">
-    <h2 style="text-align:center">Một mức giá, đầy đủ tính năng</h2>
-    <p class="sub">Không chia gói nhỏ lẻ — dùng thử thoải mái trước khi quyết định.</p>
-    <div class="price-grid">
+    <h2 style="text-align:center">Dùng bao nhiêu, trả bấy nhiêu</h2>
+    <p class="sub">Không thuê bao, không giới hạn ngày — nạp Medi và dùng dần, còn Medi là còn dùng được.</p>
 
+    <div style="max-width:640px;margin:0 auto 40px;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:22px 26px;text-align:center">
+      <div style="font-family:'Space Grotesk';font-size:19px;font-weight:700;margin-bottom:6px">1.000đ = 1 Medi = 100 lượt autofill / autoclick</div>
+      <div style="font-size:13.5px;color:var(--muted)">Mỗi lần dùng "Thao tác nhanh" trừ dần theo lượt thực tế — hệ thống gộp trừ theo từng đợt để không làm chậm quá trình điền, không tính lẻ từng cú bấm.</div>
+    </div>
+
+    <div class="price-grid">
       <div class="plan">
         <div class="p-name">Dùng thử</div>
-        <div class="p-price">0đ <small>/ 24 giờ</small></div>
-        <div class="p-desc">Trải nghiệm toàn bộ tính năng như bản đầy đủ, áp dụng 1 lần cho mỗi máy.</div>
+        <div class="p-price">0đ <small>/ 1 lần</small></div>
+        <div class="p-desc">Tặng 5 Medi (≈500 lượt) để trải nghiệm toàn bộ tính năng, áp dụng đúng 1 lần cho mỗi máy.</div>
         <ul>
           <li>Toàn bộ tính năng bản đầy đủ</li>
           <li>Không cần thẻ, không ràng buộc</li>
-          <li>Tự hết hạn sau 24 giờ</li>
+          <li>Chỉ 1 lần duy nhất trên mỗi máy</li>
         </ul>
-        <button class="btn btn-ghost" onclick="document.getElementById('trialBox').classList.toggle('open')">Lấy mã dùng thử</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('trialBox').classList.toggle('open')">Lấy 5 Medi dùng thử</button>
         <div class="pay-box" id="trialBox">
-          Gửi <b>Mã máy (Machine ID)</b> — xem trong popup License của script sau khi cài — cho Admin qua Zalo bên dưới để nhận mã dùng thử 24 giờ, hoàn toàn miễn phí.
+          Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") và bấm <b>"Dùng thử +5 Medi"</b> — cấp ngay lập tức, không cần chờ Admin.
           <div style="margin-top:12px">
             <a class="help-note zalo-link" href="https://zalo.me/0868919790" target="_blank" rel="noopener">
-              💬 Nhắn Zalo 0868.91.97.90 để nhận mã dùng thử
+              💬 Chưa cài được script? Nhắn Zalo 0868.91.97.90
             </a>
           </div>
         </div>
       </div>
 
       <div class="plan featured">
-        <div class="p-name">Gói đầy đủ</div>
-        <div class="p-price">490.000đ <small>/ tháng</small></div>
-        <div class="p-desc">Dùng không giới hạn số phiếu trong 30 ngày kể từ lúc kích hoạt.</div>
+        <div class="p-name">Nạp Medi</div>
+        <div class="p-price">Từ 100.000đ <small>/ lần nạp</small></div>
+        <div class="p-desc">Nạp càng nhiều, tặng càng nhiều — Medi không hết hạn, dùng dần thoải mái.</div>
         <ul>
-          <li>Toàn bộ tính năng, không giới hạn</li>
-          <li>30 ngày kể từ lúc kích hoạt</li>
-          <li>Hỗ trợ qua Zalo trong giờ hành chính</li>
+          <li>100.000đ → <b>100 Medi</b> (10.000 lượt)</li>
+          <li>500.000đ → <b>525 Medi</b> <span style="color:var(--teal);font-weight:700">(+5%)</span></li>
+          <li>1.000.000đ → <b>1.100 Medi</b> <span style="color:var(--teal);font-weight:700">(+10%)</span></li>
+          <li>2.000.000đ → <b>2.300 Medi</b> <span style="color:var(--teal);font-weight:700">(+15%)</span></li>
         </ul>
-        <button class="btn btn-primary" onclick="document.getElementById('buyBox').classList.toggle('open')">💳 Mua ngay</button>
+        <button class="btn btn-primary" onclick="document.getElementById('buyBox').classList.toggle('open')">💳 Nạp ngay</button>
         <div class="pay-box" id="buyBox">
-          <b>Bước 1.</b> Quét mã QR bên dưới, chuyển đúng <b>490.000đ</b>, nội dung chuyển khoản ghi <b>Mã máy</b> của bạn (VD: <code>MID-A1B2C3D4</code>).
-          <img src="https://img.vietqr.io/image/TEMPLATE_BANK-TEMPLATE_ACCOUNT-compact2.png?amount=490000&addInfo=MID-A1B2C3D4" alt="QR chuyển khoản" onerror="this.style.display='none'">
+          <b>Bước 1.</b> Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") — popup hiện sẵn <b>Mã máy</b> và số tài khoản nhận tiền đã điền sẵn, không cần gõ tay.
+          <img src="https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=100000&addInfo=MID-A1B2C3D4" alt="QR chuyển khoản minh hoạ" onerror="this.style.display='none'">
           <ol class="steps">
-            <li>Chuyển khoản đúng số tiền, đúng nội dung là Mã máy</li>
-            <li>Nhắn Zalo Admin kèm ảnh chụp giao dịch</li>
-            <li>Nhận mã kích hoạt 8 ký tự trong ít phút, dán vào popup License</li>
+            <li>Chuyển khoản đúng số tiền muốn nạp (tối thiểu 100.000đ), nội dung ghi đúng <b>Mã máy</b> hiện trong popup (VD: <code>MID-A1B2C3D4</code>)</li>
+            <li>Hệ thống tự động nhận diện giao dịch và cộng Medi ngay — thường chỉ vài giây đến vài phút, không cần nhắn Zalo hay chờ Admin xác nhận</li>
+            <li>Mở lại popup Ví Medi, bấm "Làm mới số dư" để thấy Medi vừa nạp</li>
           </ol>
           <div style="margin-top:12px">
             <a class="help-note zalo-link" href="https://zalo.me/0868919790" target="_blank" rel="noopener">
-              💬 Nhắn Zalo 0868.91.97.90 sau khi chuyển khoản
+              💬 Chuyển khoản xong lâu chưa thấy cộng? Nhắn Zalo 0868.91.97.90
             </a>
           </div>
         </div>
       </div>
+    </div>
 
+    <div style="max-width:640px;margin:22px auto 0;font-size:12.5px;color:var(--muted);text-align:center">
+      Nếu 1 đợt điền vượt quá số Medi còn lại, hệ thống <b>không xoá bỏ</b> phần đã dùng vượt — chỉ báo "sắp hết Medi" và giữ lại để trừ tiếp khi bạn nạp thêm.
     </div>
   </div>
 </section>
@@ -353,19 +362,19 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
       <div class="step">
         <div class="s-num">3</div>
         <h3>Lấy Mã máy</h3>
-        <p>Vào trang Medinet, bấm nút "Thao tác nhanh" bất kỳ — popup License hiện Mã máy riêng của thiết bị bạn.</p>
+        <p>Vào trang Medinet, bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi" — popup hiện Mã máy riêng của thiết bị bạn.</p>
       </div>
       <div class="step">
         <div class="s-num">4</div>
         <h3>Kích hoạt</h3>
-        <p>Gửi Mã máy để lấy mã dùng thử hoặc mua gói, dán mã 8 ký tự vào popup License là dùng được ngay.</p>
+        <p>Bấm "Dùng thử +5 Medi" để dùng ngay, hoặc chuyển khoản theo hướng dẫn trong popup khi cần dùng nhiều — Ví tự động cộng Medi, không cần dán mã hay nhắn Zalo.</p>
       </div>
     </div>
 
     <div class="help-note">
       <div>🙋</div>
       <div>
-        Chưa biết cài đặt hoặc gặp lỗi khi cài? Nhắn trực tiếp Admin — sẽ hỗ trợ cài từ xa và cấp dùng thử.<br>
+        Chưa biết cài đặt hoặc gặp lỗi khi cài? Nhắn trực tiếp Admin — sẽ hỗ trợ cài từ xa và cho dùng thử.<br>
         <a class="zalo-link" href="https://zalo.me/0868919790" target="_blank" rel="noopener">💬 Zalo: 0868.91.97.90</a>
       </div>
     </div>
@@ -377,27 +386,32 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
     <h2>Câu hỏi thường gặp</h2>
 
     <details class="qa">
-      <summary>Dùng thử 24 giờ có mất tiền không?</summary>
-      <div class="a">Hoàn toàn miễn phí, đầy đủ tính năng như bản trả phí. Mỗi máy chỉ dùng thử được 1 lần — hết 24 giờ muốn tiếp tục thì cần mua gói.</div>
+      <summary>Dùng thử 5 Medi có mất tiền không?</summary>
+      <div class="a">Hoàn toàn miễn phí, đầy đủ tính năng như khi đã nạp tiền — tương đương khoảng 500 lượt autofill/autoclick. Mỗi máy chỉ dùng thử được 1 lần.</div>
     </details>
     <details class="qa">
-      <summary>Chuyển khoản xong bao lâu thì có mã?</summary>
-      <div class="a">Thường trong vài phút trong giờ hành chính, sau khi Admin xác nhận đã nhận đúng số tiền. Nếu quá lâu chưa thấy mã hoặc kích hoạt bị lỗi, nhắn Zalo 0868.91.97.90 để được xử lý ngay.</div>
+      <summary>Chuyển khoản xong bao lâu thì có Medi?</summary>
+      <div class="a">Hệ thống tự động nhận diện giao dịch và cộng Medi ngay, thường chỉ vài giây đến vài phút — hoạt động 24/7, không cần chờ giờ hành chính hay Admin xác nhận thủ công. Nếu quá lâu chưa thấy cộng hoặc nội dung chuyển khoản bị sai Mã máy, nhắn Zalo 0868.91.97.90 để được xử lý ngay.</div>
     </details>
     <details class="qa">
-      <summary>Mã kích hoạt dùng được trên mấy máy?</summary>
-      <div class="a">Mỗi mã chỉ gắn với đúng 1 Mã máy (Machine ID) đã gửi khi mua — không dùng chéo sang máy khác được.</div>
+      <summary>Medi có dùng được trên nhiều máy không?</summary>
+      <div class="a">Không — Ví Medi gắn với đúng 1 Mã máy (Machine ID) đã nạp, không dùng chéo sang máy khác được.</div>
     </details>
     <details class="qa">
-      <summary>Hết 30 ngày có tự động trừ tiền tiếp không?</summary>
-      <div class="a">Không. Hết hạn thì script tự khoá lại, bạn chủ động mua gói mới khi cần dùng tiếp — không có trừ tiền tự động.</div>
+      <summary>Medi có hết hạn không?</summary>
+      <div class="a">Không hết hạn theo thời gian — còn Medi trong Ví là còn dùng được, dùng bao nhiêu trừ bấy nhiêu, không có phí duy trì hàng tháng.</div>
+    </details>
+    <details class="qa">
+      <summary>Lỡ dùng vượt quá số Medi còn lại thì sao?</summary>
+      <div class="a">Hệ thống không xoá bỏ phần đã dùng vượt — chỉ báo "sắp hết Medi" và giữ lại phần đó để trừ tiếp khi bạn nạp thêm, không gây thiệt hại cho bạn.</div>
     </details>
     <details class="qa">
       <summary>Tôi chưa biết cài Tampermonkey/script thì sao?</summary>
-      <div class="a">Nhắn Zalo Admin, sẽ hỗ trợ cài đặt từ xa và cấp dùng thử để bạn trải nghiệm trước khi quyết định mua.</div>
+      <div class="a">Nhắn Zalo Admin, sẽ hỗ trợ cài đặt từ xa và cấp dùng thử để bạn trải nghiệm trước khi quyết định nạp Medi.</div>
     </details>
   </div>
 </section>
+
 
 <footer>
   <div class="wrap foot-row">
