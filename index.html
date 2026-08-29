@@ -165,6 +165,31 @@ header.top{
 .amt-tab.active span{color:var(--teal-deep);}
 .amt-note{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;}
 
+.mid-input-row{margin-top:16px;text-align:left;}
+.mid-input-row label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;}
+.mid-input-wrap{display:flex;gap:8px;}
+.mid-input-wrap input{
+  flex:1;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;
+  font-family:monospace;font-size:14px;letter-spacing:.5px;color:var(--ink);
+  outline:none;background:#fff;text-transform:uppercase;
+}
+.mid-input-wrap input:focus{border-color:var(--teal);}
+.mid-input-wrap button{
+  padding:10px 16px;border:none;border-radius:10px;background:var(--teal);
+  color:#fff;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;
+}
+.mid-input-wrap button:hover{opacity:.9;}
+.mid-input-hint{font-size:12px;color:var(--muted);margin-top:6px;}
+.mid-input-hint.ok{color:var(--teal-deep);font-weight:600;}
+.mid-input-hint.err{color:#b3261e;}
+
+.qr-placeholder{
+  margin:16px auto;width:180px;height:180px;border-radius:10px;
+  border:1.5px dashed var(--line);background:#f5f9f7;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:12px;color:var(--muted);padding:14px;
+}
+
 /* ---------- install steps ---------- */
 .install{padding:70px 0;background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
 .install h2{font-size:28px;margin-bottom:8px;}
@@ -333,25 +358,74 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
         </ul>
         <button class="btn btn-primary" onclick="document.getElementById('buyBox').classList.toggle('open')">💳 Nạp ngay</button>
         <div class="pay-box" id="buyBox">
-          <b>Bước 1.</b> Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") — popup hiện sẵn <b>Mã máy</b> và số tài khoản nhận tiền đã điền sẵn, không cần gõ tay.
+          <b>Bước 1.</b> Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") — popup hiện sẵn <b>Mã máy</b> của bạn, dạng <code>MID-XXXXXXXX</code>. Sao chép mã đó và dán vào ô dưới đây để tạo QR đúng thông tin.
+          <div class="mid-input-row">
+            <label for="mttMidInput">Mã máy của bạn</label>
+            <div class="mid-input-wrap">
+              <input type="text" id="mttMidInput" placeholder="VD: MID-A1B2C3D4" maxlength="13" autocomplete="off" spellcheck="false" oninput="mttOnMidInput(this)">
+              <button type="button" id="mttMidPasteBtn" onclick="mttPasteMid()">Dán</button>
+            </div>
+            <div class="mid-input-hint" id="mttMidHint">Nhập đúng định dạng <code>MID-</code> + 8 ký tự để tạo mã QR.</div>
+          </div>
           <div class="amt-tabs" role="tablist" aria-label="Chọn mức nạp">
             <button type="button" class="amt-tab active" data-amt="100000" onclick="mttSetAmt(this)">100.000đ<span>100 Medi</span></button>
             <button type="button" class="amt-tab" data-amt="500000" onclick="mttSetAmt(this)">500.000đ<span>525 Medi (+5%)</span></button>
             <button type="button" class="amt-tab" data-amt="1000000" onclick="mttSetAmt(this)">1.000.000đ<span>1.100 Medi (+10%)</span></button>
             <button type="button" class="amt-tab" data-amt="2000000" onclick="mttSetAmt(this)">2.000.000đ<span>2.300 Medi (+15%)</span></button>
           </div>
-          <img id="mttQrImg" src="https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=100000&addInfo=MID-A1B2C3D4" alt="QR chuyển khoản minh hoạ" onerror="this.style.display='none'">
-          <div class="amt-note">QR minh hoạ theo số tiền đã chọn — khi chuyển khoản thật, nhớ đổi nội dung sang đúng <b>Mã máy</b> của bạn hiện trong popup Ví Medi.</div>
+          <div id="mttQrPlaceholder" class="qr-placeholder">🔒 Nhập Mã máy ở trên để tạo mã QR chuyển khoản</div>
+          <img id="mttQrImg" alt="QR chuyển khoản" style="display:none" onerror="this.style.display='none'">
+          <div class="amt-note">QR sẽ ghi sẵn đúng số tiền và <b>Mã máy</b> bạn vừa nhập vào nội dung chuyển khoản — chuyển đúng như QR để hệ thống tự nhận diện.</div>
           <script>
+            var MTT_AMT = 100000;
+            function mttRenderQr(){
+              var mid = (document.getElementById('mttMidInput').value || '').trim().toUpperCase();
+              var img = document.getElementById('mttQrImg');
+              var ph = document.getElementById('mttQrPlaceholder');
+              var ok = /^MID-[0-9A-F]{8}$/.test(mid);
+              if (ok) {
+                img.src = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + MTT_AMT + '&addInfo=' + encodeURIComponent(mid);
+                img.style.display = 'block';
+                ph.style.display = 'none';
+              } else {
+                img.style.display = 'none';
+                ph.style.display = 'block';
+              }
+              return ok;
+            }
+            function mttOnMidInput(inp){
+              var hint = document.getElementById('mttMidHint');
+              var ok = mttRenderQr();
+              if (inp.value.trim() === '') {
+                hint.textContent = 'Nhập đúng định dạng MID- + 8 ký tự để tạo mã QR.';
+                hint.className = 'mid-input-hint';
+              } else if (ok) {
+                hint.textContent = '✓ Mã máy hợp lệ — QR đã sẵn sàng bên dưới.';
+                hint.className = 'mid-input-hint ok';
+              } else {
+                hint.textContent = 'Mã máy chưa đúng định dạng (VD: MID-A1B2C3D4).';
+                hint.className = 'mid-input-hint err';
+              }
+            }
+            function mttPasteMid(){
+              if (navigator.clipboard && navigator.clipboard.readText) {
+                navigator.clipboard.readText().then(function(text){
+                  var inp = document.getElementById('mttMidInput');
+                  inp.value = (text || '').trim().toUpperCase();
+                  mttOnMidInput(inp);
+                }).catch(function(){});
+              }
+            }
             function mttSetAmt(btn){
               document.querySelectorAll('.amt-tab').forEach(function(b){ b.classList.remove('active'); });
               btn.classList.add('active');
-              var img = document.getElementById('mttQrImg');
-              img.src = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + btn.dataset.amt + '&addInfo=MID-A1B2C3D4';
+              MTT_AMT = btn.dataset.amt;
+              mttRenderQr();
             }
           </script>
           <ol class="steps">
-            <li>Chuyển khoản đúng số tiền muốn nạp (tối thiểu 100.000đ), nội dung ghi đúng <b>Mã máy</b> hiện trong popup (VD: <code>MID-A1B2C3D4</code>)</li>
+            <li>Nhập <b>Mã máy</b> của bạn ở ô trên và chọn số tiền muốn nạp (tối thiểu 100.000đ)</li>
+            <li>Chuyển khoản đúng như mã QR hiện ra — nội dung tự động ghi đúng <b>Mã máy</b> của bạn</li>
             <li>Hệ thống tự động nhận diện giao dịch và cộng Medi ngay — thường chỉ vài giây đến vài phút, không cần nhắn Zalo hay chờ Admin xác nhận</li>
             <li>Mở lại popup Ví Medi, bấm "Làm mới số dư" để thấy Medi vừa nạp</li>
           </ol>
