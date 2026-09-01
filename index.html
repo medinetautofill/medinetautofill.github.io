@@ -190,6 +190,46 @@ header.top{
   font-size:12px;color:var(--muted);padding:14px;
 }
 
+/* thong tin lien he truoc khi mua (SDT bat buoc) */
+.contact-box{
+  margin-top:16px;text-align:left;background:#fff8ee;border:1.5px solid #f0ddb8;
+  border-radius:12px;padding:14px 16px;
+}
+.contact-box .contact-title{
+  font-size:12px;font-weight:800;color:#8a5a00;text-transform:uppercase;
+  letter-spacing:.04em;margin-bottom:8px;
+}
+.contact-box input{
+  width:100%;padding:10px 12px;border:1.5px solid #e6cf9a;border-radius:9px;
+  font-size:14px;color:var(--ink);outline:none;background:#fff;margin-bottom:8px;
+}
+.contact-box input:last-of-type{margin-bottom:0;}
+.contact-box input:focus{border-color:var(--clay);}
+.contact-hint{font-size:12px;color:#a15c00;margin-top:8px;line-height:1.6;}
+.contact-hint.ok{color:var(--teal-deep);font-weight:600;}
+.gated{opacity:.4;pointer-events:none;transition:opacity .15s;}
+
+/* canh bao ket qua khong thay the kham thuc te */
+.disclaimer-box{
+  background:#fff4e5;border:1.5px solid #f3c98a;border-radius:14px;
+  padding:18px 20px;font-size:13.5px;color:#6b4a00;line-height:1.75;
+  max-width:900px;margin:0 auto 26px;
+}
+.disclaimer-box b{color:#8a5a00;}
+.disclaimer-box .dis-title{
+  font-family:'Space Grotesk';font-weight:700;font-size:15px;color:#8a5a00;
+  margin-bottom:8px;display:flex;align-items:center;gap:8px;
+}
+
+/* thong ke gia lap: da mua / mua lai */
+.stat-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:18px 0 6px;}
+.stat-card-mini{
+  background:#fff;border:1px solid var(--line);border-radius:12px;
+  padding:14px 22px;text-align:center;min-width:150px;
+}
+.stat-card-mini .num{font-family:'Space Grotesk';font-size:24px;font-weight:700;color:var(--teal-deep);}
+.stat-card-mini .lbl{font-size:12px;color:var(--muted);margin-top:2px;}
+
 /* ---------- install steps ---------- */
 .install{padding:70px 0;background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
 .install h2{font-size:28px;margin-bottom:8px;}
@@ -328,6 +368,19 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
       <div style="font-size:13.5px;color:var(--muted)">Mỗi lần dùng "Thao tác nhanh" trừ dần theo lượt thực tế — hệ thống gộp trừ theo từng đợt để không làm chậm quá trình điền, không tính lẻ từng cú bấm.</div>
     </div>
 
+    <div class="stat-cards">
+      <div class="stat-card-mini"><div class="num" id="mttBoughtCounter">…</div><div class="lbl">📦 Lượt đã mua Medi</div></div>
+      <div class="stat-card-mini"><div class="num" id="mttRebuyCounter">…</div><div class="lbl">🔁 Khách quay lại mua thêm</div></div>
+      <div class="stat-card-mini"><div class="num" id="mttPurchaseCounter2">…</div><div class="lbl">👤 Đơn vị / cá nhân đang dùng</div></div>
+    </div>
+
+    <div class="disclaimer-box">
+      <div class="dis-title">⚠️ Lưu ý quan trọng trước khi dùng</div>
+      Medinet AutoFill chỉ hỗ trợ <b>điền nhanh các giá trị thông thường, mặc định</b> hay gặp trong khám sức khoẻ định kỳ để tiết kiệm thời gian nhập liệu — công cụ <b>không khám bệnh</b> và <b>không tự biết kết quả thực tế</b> của từng người.
+      Sau khi dùng "Thao tác nhanh", người dùng <b>bắt buộc phải kiểm tra và chỉnh sửa lại</b> toàn bộ chỉ số/kết quả cho đúng với <b>Phiếu khám sức khoẻ đã được bác sĩ trực tiếp thăm khám và ký xác nhận</b> trước khi lưu/hoàn tất hồ sơ.
+      Người dùng chịu trách nhiệm về tính chính xác của dữ liệu đã nhập; Medinet AutoFill và tác giả <b>không chịu trách nhiệm</b> với sai lệch, hậu quả pháp lý hoặc y khoa phát sinh do không kiểm tra, chỉnh sửa dữ liệu trước khi hoàn tất — công cụ hỗ trợ thao tác nhanh, không thay thế cho việc khám và xác nhận của bác sĩ.
+    </div>
+
     <div class="price-grid">
       <div class="plan">
         <div class="p-name">Dùng thử</div>
@@ -370,6 +423,16 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
             </div>
             <div class="mid-input-hint" id="mttMidHint">Nhập đúng định dạng <code>MID-</code> + 8 ký tự để tạo mã QR.</div>
           </div>
+
+          <div class="contact-box">
+            <div class="contact-title">📞 Thông tin liên hệ (để hỗ trợ/bảo hành sau này)</div>
+            <input type="tel" id="mttContactPhone" placeholder="Số điện thoại (bắt buộc để tạo QR)" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
+            <input type="text" id="mttContactName" placeholder="Tên của bạn (không bắt buộc)" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
+            <input type="text" id="mttContactZalo" placeholder="Zalo (nếu khác SĐT, không bắt buộc)" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
+            <div class="contact-hint" id="mttContactHint">Nhập Số điện thoại để mở khoá chọn mức nạp và tạo mã QR bên dưới.</div>
+          </div>
+
+          <div id="mttGatedArea" class="gated">
           <div class="amt-tabs" role="tablist" aria-label="Chọn mức nạp">
             <button type="button" class="amt-tab active" data-amt="100000" onclick="mttSetAmt(this)">100.000đ<span>100 Medi</span></button>
             <button type="button" class="amt-tab" data-amt="500000" onclick="mttSetAmt(this)">500.000đ<span>525 Medi (+5%)</span></button>
@@ -379,6 +442,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
           <div id="mttQrPlaceholder" class="qr-placeholder">🔒 Nhập Mã máy ở trên để tạo mã QR chuyển khoản</div>
           <img id="mttQrImg" alt="QR chuyển khoản" style="display:none" onerror="this.style.display='none'">
           <div class="amt-note">QR sẽ ghi sẵn đúng số tiền và <b>Mã máy</b> bạn vừa nhập vào nội dung chuyển khoản — chuyển đúng như QR để hệ thống tự nhận diện.</div>
+          </div><!-- /mttGatedArea -->
           <script>
             var MTT_AMT = 100000;
             // Cung URL Worker voi Medinet_user.js / Medinet_Wallet_Admin.html.
@@ -399,7 +463,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
               var img = document.getElementById('mttQrImg');
               var ph = document.getElementById('mttQrPlaceholder');
               var ok = /^MID-[0-9A-F]{8}$/.test(mid);
-              if (ok) {
+              if (ok && mttIsPhoneValid()) {
                 img.src = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + MTT_AMT + '&addInfo=' + encodeURIComponent(mid);
                 img.style.display = 'block';
                 ph.style.display = 'none';
@@ -413,6 +477,57 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
               }
               return ok;
             }
+
+            // ================================================================
+            // Thong tin lien he (SDT bat buoc, Ten/Zalo tuy chon) - khoa khu
+            // vuc chon muc nap + QR cho toi khi SDT hop le, giong logic trong
+            // popup "Vi Medi" cua script Tampermonkey. Gia tri duoc luu lai
+            // (localStorage) va gui len he thong qua /customer/register
+            // (khong can Admin Key) ngay khi hop le.
+            // ================================================================
+            var CONTACT_STORE_KEY = '_mtt_web_contact_v1';
+            var mttContactRegisteredFor = '';
+            function mttIsPhoneValid(){
+              var v = (document.getElementById('mttContactPhone').value || '').trim();
+              return /^[0-9+ ]{8,15}$/.test(v);
+            }
+            function mttSetGateEnabled(enabled){
+              var gate = document.getElementById('mttGatedArea');
+              if (enabled) gate.classList.remove('gated'); else gate.classList.add('gated');
+            }
+            function mttOnContactInput(){
+              var phone = (document.getElementById('mttContactPhone').value || '').trim();
+              var name = (document.getElementById('mttContactName').value || '').trim();
+              var zalo = (document.getElementById('mttContactZalo').value || '').trim();
+              var hint = document.getElementById('mttContactHint');
+              var ok = mttIsPhoneValid();
+              mttSetGateEnabled(ok);
+              hint.textContent = ok
+                ? '✓ Đã đủ điều kiện tạo mã QR — chọn mức nạp và nhập Mã máy bên trên.'
+                : 'Nhập Số điện thoại để mở khoá chọn mức nạp và tạo mã QR bên dưới.';
+              hint.className = ok ? 'contact-hint ok' : 'contact-hint';
+              try { localStorage.setItem(CONTACT_STORE_KEY, JSON.stringify({ phone: phone, name: name, zalo: zalo })); } catch(e){}
+              var mid = (document.getElementById('mttMidInput').value || '').trim().toUpperCase();
+              if (ok && /^MID-[0-9A-F]{8}$/.test(mid) && mttContactRegisteredFor !== (mid + '|' + phone)) {
+                mttContactRegisteredFor = mid + '|' + phone;
+                fetch(MTT_WALLET_API + '/customer/register', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ mid: mid, phone: phone, name: name, zalo: zalo })
+                }).catch(function(){});
+              }
+              mttRenderQr();
+            }
+            // Khoi phuc thong tin da nhap lan truoc (neu co)
+            (function mttRestoreContact(){
+              try {
+                var saved = JSON.parse(localStorage.getItem(CONTACT_STORE_KEY) || '{}');
+                if (saved.phone) document.getElementById('mttContactPhone').value = saved.phone;
+                if (saved.name) document.getElementById('mttContactName').value = saved.name;
+                if (saved.zalo) document.getElementById('mttContactZalo').value = saved.zalo;
+              } catch(e){}
+              mttSetGateEnabled(mttIsPhoneValid());
+            })();
             function mttOnMidInput(inp){
               var hint = document.getElementById('mttMidHint');
               var ok = mttRenderQr();
@@ -557,7 +672,8 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
 // ================================================================
 (function () {
   var COUNTER_START = new Date('2026-08-01T00:00:00+07:00').getTime();
-  var COUNTER_BASE = 120; // so luong tai moc COUNTER_START
+  var COUNTER_BASE = 120; // so luong tai moc COUNTER_START (nguoi dung/don vi)
+  var BOUGHT_BASE = 196;  // so luong tai moc COUNTER_START (luot da mua Medi - > so nguoi vi 1 nguoi co the mua nhieu lan)
 
   // PRNG don gian, tat dinh theo 1 so nguyen seed (cung seed -> cung ket
   // qua moi lan) - du de tao cam giac "tang ngau nhien" ma khong can goi
@@ -567,19 +683,29 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
     return x - Math.floor(x);
   }
 
-  function computeCounter() {
+  function computeGrowth(base, minInc, maxInc, seedOffset) {
     var now = Date.now();
     var daysElapsed = Math.max(0, Math.floor((now - COUNTER_START) / 86400000));
-    var total = COUNTER_BASE;
+    var total = base;
     for (var d = 1; d <= daysElapsed; d++) {
-      total += 3 + Math.floor(seededRand(d) * 3); // +3..+5 moi ngay
+      total += minInc + Math.floor(seededRand(d + seedOffset) * (maxInc - minInc + 1));
     }
     return total;
   }
 
   function render() {
-    var el = document.getElementById('mttPurchaseCounter');
-    if (el) el.textContent = computeCounter().toLocaleString('vi-VN');
+    var users = computeGrowth(COUNTER_BASE, 3, 5, 0);       // +3..+5/ngay
+    var bought = computeGrowth(BOUGHT_BASE, 5, 9, 1000);    // +5..+9/ngay - luot mua > so nguoi vi mua lai nhieu lan
+    var rebuy = Math.round(bought * 0.9);                    // "mua lai" ~ 90% so luot da mua, theo yeu cau
+
+    ['mttPurchaseCounter', 'mttPurchaseCounter2'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = users.toLocaleString('vi-VN');
+    });
+    var boughtEl = document.getElementById('mttBoughtCounter');
+    if (boughtEl) boughtEl.textContent = bought.toLocaleString('vi-VN');
+    var rebuyEl = document.getElementById('mttRebuyCounter');
+    if (rebuyEl) rebuyEl.textContent = rebuy.toLocaleString('vi-VN');
   }
 
   render();
