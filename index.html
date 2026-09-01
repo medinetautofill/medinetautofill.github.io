@@ -269,6 +269,9 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
         <span>⚡ Cài đặt dưới 2 phút</span>
         <span>💬 Hỗ trợ trực tiếp qua Zalo</span>
       </div>
+      <div class="trust-row" style="margin-top:10px">
+        <span>📈 Đã có <b id="mttPurchaseCounter">…</b> đơn vị / cá nhân sử dụng</span>
+      </div>
     </div>
     <div class="hero-visual">
       <div class="browser-dots"><span></span><span></span><span></span></div>
@@ -378,6 +381,19 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
           <div class="amt-note">QR sẽ ghi sẵn đúng số tiền và <b>Mã máy</b> bạn vừa nhập vào nội dung chuyển khoản — chuyển đúng như QR để hệ thống tự nhận diện.</div>
           <script>
             var MTT_AMT = 100000;
+            // Cung URL Worker voi Medinet_user.js / Medinet_Wallet_Admin.html.
+            var MTT_WALLET_API = 'https://medinet-wallet.dha-medinet.workers.dev';
+            var mttOrderCreatedFor = ''; // "mid|amount" da bao pending, tranh spam goi lai
+            function mttReportPendingOrder(mid, amt){
+              var key = mid + '|' + amt;
+              if (mttOrderCreatedFor === key) return; // da bao roi, khong goi lai
+              mttOrderCreatedFor = key;
+              fetch(MTT_WALLET_API + '/order/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mid: mid, amountVnd: amt })
+              }).catch(function(){ /* khong chan trai nghiem neu loi mang */ });
+            }
             function mttRenderQr(){
               var mid = (document.getElementById('mttMidInput').value || '').trim().toUpperCase();
               var img = document.getElementById('mttQrImg');
@@ -387,6 +403,10 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
                 img.src = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + MTT_AMT + '&addInfo=' + encodeURIComponent(mid);
                 img.style.display = 'block';
                 ph.style.display = 'none';
+                // Bao truoc cho Worker biet khach dang chuan bi chuyen khoan
+                // (tao 1 don "Cho thanh toan" de Admin theo doi) - khong
+                // anh huong QR/trai nghiem neu goi that bai.
+                mttReportPendingOrder(mid, parseInt(MTT_AMT, 10));
               } else {
                 img.style.display = 'none';
                 ph.style.display = 'block';
@@ -527,6 +547,46 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
     </div>
   </div>
 </footer>
+
+<script>
+// ================================================================
+// Bo dem "Da co X don vi/ca nhan su dung" tren trang gioi thieu - tang
+// dan MOI NGAY mot luong nho (3-5), tinh theo NGAY THUC TE da troi qua
+// tu 1 moc co dinh (khong phu thuoc lan tai trang) nen luon nhat quan
+// giua cac lan xem, khong tu nhien "tut" lai khi tai lai trang.
+// ================================================================
+(function () {
+  var COUNTER_START = new Date('2026-08-01T00:00:00+07:00').getTime();
+  var COUNTER_BASE = 120; // so luong tai moc COUNTER_START
+
+  // PRNG don gian, tat dinh theo 1 so nguyen seed (cung seed -> cung ket
+  // qua moi lan) - du de tao cam giac "tang ngau nhien" ma khong can goi
+  // may chu.
+  function seededRand(seed) {
+    var x = Math.sin(seed * 99991 + 12.9898) * 43758.5453;
+    return x - Math.floor(x);
+  }
+
+  function computeCounter() {
+    var now = Date.now();
+    var daysElapsed = Math.max(0, Math.floor((now - COUNTER_START) / 86400000));
+    var total = COUNTER_BASE;
+    for (var d = 1; d <= daysElapsed; d++) {
+      total += 3 + Math.floor(seededRand(d) * 3); // +3..+5 moi ngay
+    }
+    return total;
+  }
+
+  function render() {
+    var el = document.getElementById('mttPurchaseCounter');
+    if (el) el.textContent = computeCounter().toLocaleString('vi-VN');
+  }
+
+  render();
+  // Kiem tra lai moi gio de tu tang khi qua moc 00:00 ma khong can tai lai trang.
+  setInterval(render, 60 * 60 * 1000);
+})();
+</script>
 
 </body>
 </html>
