@@ -364,7 +364,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
     <p class="sub">Không thuê bao, không giới hạn ngày — nạp Medi và dùng dần, còn Medi là còn dùng được.</p>
 
     <div style="max-width:640px;margin:0 auto 40px;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:22px 26px;text-align:center">
-      <div style="font-family:'Space Grotesk';font-size:19px;font-weight:700;margin-bottom:6px">1.000đ = 1 Medi = 100 lượt autofill / autoclick</div>
+      <div style="font-family:'Space Grotesk';font-size:19px;font-weight:700;margin-bottom:6px">2.000đ = 1 Medi = 100 lượt autofill / autoclick</div>
       <div style="font-size:13.5px;color:var(--muted)">Mỗi lần dùng "Thao tác nhanh" trừ dần theo lượt thực tế — hệ thống gộp trừ theo từng đợt để không làm chậm quá trình điền, không tính lẻ từng cú bấm.</div>
     </div>
 
@@ -407,10 +407,10 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
         <div class="p-price">Từ 100.000đ <small>/ lần nạp</small></div>
         <div class="p-desc">Nạp càng nhiều, tặng càng nhiều — Medi không hết hạn, dùng dần thoải mái.</div>
         <ul>
-          <li>100.000đ → <b>100 Medi</b> (10.000 lượt)</li>
-          <li>500.000đ → <b>525 Medi</b> <span style="color:var(--teal);font-weight:700">(+5%)</span></li>
-          <li>1.000.000đ → <b>1.100 Medi</b> <span style="color:var(--teal);font-weight:700">(+10%)</span></li>
-          <li>2.000.000đ → <b>2.300 Medi</b> <span style="color:var(--teal);font-weight:700">(+15%)</span></li>
+          <li>100.000đ → <b>50 Medi</b> (5.000 lượt)</li>
+          <li>500.000đ → <b>262 Medi</b> <span style="color:var(--teal);font-weight:700">(+5%)</span></li>
+          <li>1.000.000đ → <b>550 Medi</b> <span style="color:var(--teal);font-weight:700">(+10%)</span></li>
+          <li>2.000.000đ → <b>1.150 Medi</b> <span style="color:var(--teal);font-weight:700">(+15%)</span></li>
         </ul>
         <button class="btn btn-primary" onclick="document.getElementById('buyBox').classList.toggle('open')">💳 Nạp ngay</button>
         <div class="pay-box" id="buyBox">
@@ -434,10 +434,10 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
 
           <div id="mttGatedArea" class="gated">
           <div class="amt-tabs" role="tablist" aria-label="Chọn mức nạp">
-            <button type="button" class="amt-tab active" data-amt="100000" onclick="mttSetAmt(this)">100.000đ<span>100 Medi</span></button>
-            <button type="button" class="amt-tab" data-amt="500000" onclick="mttSetAmt(this)">500.000đ<span>525 Medi (+5%)</span></button>
-            <button type="button" class="amt-tab" data-amt="1000000" onclick="mttSetAmt(this)">1.000.000đ<span>1.100 Medi (+10%)</span></button>
-            <button type="button" class="amt-tab" data-amt="2000000" onclick="mttSetAmt(this)">2.000.000đ<span>2.300 Medi (+15%)</span></button>
+            <button type="button" class="amt-tab active" data-amt="100000" onclick="mttSetAmt(this)">100.000đ<span>50 Medi</span></button>
+            <button type="button" class="amt-tab" data-amt="500000" onclick="mttSetAmt(this)">500.000đ<span>262 Medi (+5%)</span></button>
+            <button type="button" class="amt-tab" data-amt="1000000" onclick="mttSetAmt(this)">1.000.000đ<span>550 Medi (+10%)</span></button>
+            <button type="button" class="amt-tab" data-amt="2000000" onclick="mttSetAmt(this)">2.000.000đ<span>1.150 Medi (+15%)</span></button>
           </div>
           <div id="mttQrPlaceholder" class="qr-placeholder">🔒 Nhập Mã máy ở trên để tạo mã QR chuyển khoản</div>
           <img id="mttQrImg" alt="QR chuyển khoản" style="display:none" onerror="this.style.display='none'">
