@@ -117,6 +117,21 @@ header.top{
 .feat h3{font-size:16px;margin-bottom:8px;}
 .feat p{font-size:13.5px;color:var(--muted);}
 
+/* ===== Doi tuong phu hop (quang cao) ===== */
+.audience{padding:70px 0;border-top:1px solid var(--line);}
+.audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px;}
+@media(max-width:760px){.audience-grid{grid-template-columns:1fr;}}
+.audience-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 24px;}
+.audience-card .ic{font-size:26px;margin-bottom:10px;}
+.audience-card h3{font-size:17px;margin-bottom:8px;}
+.audience-card p{font-size:14px;color:var(--muted);line-height:1.6;}
+.audience-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:24px;}
+@media(max-width:760px){.audience-benefits{grid-template-columns:1fr;}}
+.audience-benefit{background:#fff;padding:22px 20px;text-align:center;}
+.audience-benefit .ic{font-size:22px;margin-bottom:8px;}
+.audience-benefit b{display:block;font-size:15px;color:var(--ink);margin-bottom:4px;}
+.audience-benefit span{font-size:13px;color:var(--muted);}
+
 /* ---------- pricing ---------- */
 .pricing{padding:76px 0;}
 .pricing h2{font-size:28px;text-align:center;margin-bottom:8px;}
@@ -354,6 +369,33 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
       <div class="feat"><div class="num">03</div><h3>Xác nhận đã chọn đúng</h3><p>Không chỉ bấm — script kiểm tra lại trạng thái tick/chọn trước khi coi là hoàn tất, tránh báo thành công giả.</p></div>
       <div class="feat"><div class="num">04</div><h3>Tự thử lại khi mạng chậm</h3><p>Danh sách xổ xuống tải bất đồng bộ vẫn được xử lý ổn định nhờ cơ chế tự thử lại trong vài giây.</p></div>
       <div class="feat"><div class="num">05</div><h3>Cập nhật tự động</h3><p>Luôn dùng đúng bản mới nhất qua Tampermonkey, không cần cài lại thủ công mỗi lần nâng cấp.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="audience">
+  <div class="wrap">
+    <div class="section-tag">Dành cho ai</div>
+    <h2>Phù hợp với cả người làm dịch vụ lẫn nhân viên y tế trong biên chế</h2>
+    <p style="color:var(--muted);font-size:15px;max-width:640px">Dù thu nhập tính theo từng phiếu hay theo lương cố định, gánh nặng đều giống nhau: <b>vừa lo chuyên môn, vừa phải nhập liệu lặp lại hàng trăm lần mỗi ngày</b>.</p>
+
+    <div class="audience-grid">
+      <div class="audience-card">
+        <div class="ic">🧾</div>
+        <h3>Người làm dịch vụ nhập liệu (tính theo phiếu)</h3>
+        <p>Nhập càng nhanh, xử lý được càng nhiều phiếu trong cùng 1 ca — thu nhập tăng trực tiếp theo tốc độ, không phải chờ tăng lương.</p>
+      </div>
+      <div class="audience-card">
+        <div class="ic">🩺</div>
+        <h3>Nhân viên y tế vừa khám vừa nhập liệu</h3>
+        <p>Rảnh tay khỏi việc gõ đi gõ lại các mục quen thuộc, tập trung thời gian cho chuyên môn và bệnh nhân, vẫn kịp tiến độ được giao.</p>
+      </div>
+    </div>
+
+    <div class="audience-benefits">
+      <div class="audience-benefit"><div class="ic">⏱️</div><b>Tiết kiệm 75–90% thời gian</b><span>nhập liệu so với gõ tay từng ô</span></div>
+      <div class="audience-benefit"><div class="ic">💰</div><b>Nâng cao thu nhập</b><span>xử lý được nhiều phiếu hơn mỗi ca làm việc</span></div>
+      <div class="audience-benefit"><div class="ic">✅</div><b>Hoàn thành đúng tiến độ</b><span>không bị dồn việc, kịp deadline được giao</span></div>
     </div>
   </div>
 </section>
