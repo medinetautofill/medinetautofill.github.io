@@ -4,7 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Medinet Autofill — Điền phiếu khám sức khoẻ tự động</title>
-<meta name="description" content="Công cụ tự động điền phiếu Khám sức khỏe trên hệ thống Medinet HCM. Dùng thử miễn phí 5 Medi, nạp Medi dùng bao nhiêu trả bấy nhiêu.">
+<meta name="description" content="Công cụ tự động điền phiếu Khám sức khỏe trên hệ thống Medinet HCM (người lớn, trẻ em dưới 6 tuổi, lái xe). Dùng thử miễn phí ~5–10 phiếu, nạp Medi dùng bao nhiêu trả bấy nhiêu.">
+<meta name="keywords" content="medinet autofill, dien phieu kham suc khoe, quanlyskcd medinet, KSK nguoi lon, KSK tre em, KSK lai xe, tampermonkey medinet">
+<meta name="author" content="Hoàng Anh Jupiter">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://medinetautofill.github.io">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Medinet Autofill">
+<meta property="og:title" content="Medinet Autofill — Điền phiếu khám sức khoẻ tự động, nhanh gấp 10 lần">
+<meta property="og:description" content="Tiện ích trình duyệt điền tự động phiếu KSK người lớn, trẻ em dưới 6 tuổi và lái xe trên hệ thống Medinet HCM. Dùng thử miễn phí trước khi mua.">
+<meta property="og:url" content="https://medinetautofill.github.io">
+<meta property="og:locale" content="vi_VN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Medinet Autofill — Điền phiếu khám sức khoẻ tự động">
+<meta name="twitter:description" content="Điền tự động phiếu KSK người lớn, trẻ em dưới 6 tuổi và lái xe trên hệ thống Medinet HCM. Dùng thử miễn phí trước khi mua.">
+<meta name="theme-color" content="#0f6659">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -199,11 +213,29 @@ header.top{
 .mid-input-hint.err{color:#b3261e;}
 
 .qr-placeholder{
-  margin:16px auto;width:180px;height:180px;border-radius:10px;
+  margin:16px auto;width:200px;height:200px;border-radius:10px;
   border:1.5px dashed var(--line);background:#f5f9f7;
   display:flex;align-items:center;justify-content:center;text-align:center;
   font-size:12px;color:var(--muted);padding:14px;
 }
+
+/* QR + nut phong to (hover de hien nut, bam de xem QR co lon hon) */
+.qr-zoom-wrap{position:relative;width:200px;margin:16px auto 0;}
+.qr-zoom-btn{
+  position:absolute;right:6px;bottom:6px;width:34px;height:34px;border-radius:9px;
+  background:rgba(11,31,43,.72);color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  opacity:0;transform:scale(.85);transition:opacity .15s,transform .15s;
+}
+.qr-zoom-wrap:hover .qr-zoom-btn,.qr-zoom-btn:focus{opacity:1;transform:scale(1);}
+@media(hover:none){.qr-zoom-btn{opacity:1;transform:scale(1);}}
+.qr-zoom-overlay{
+  display:none;position:fixed;inset:0;background:rgba(11,31,43,.82);
+  z-index:200;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;
+}
+.qr-zoom-overlay.open{display:flex;}
+.qr-zoom-overlay img{width:min(88vw,420px);height:min(88vw,420px);border-radius:16px;background:#fff;padding:14px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6);}
+.qr-zoom-overlay .qr-zoom-hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#fff;font-size:13px;opacity:.85;}
 
 /* thong tin lien he truoc khi mua (SDT bat buoc) */
 .contact-box{
@@ -292,6 +324,36 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
 .foot-brand{font-weight:800;font-size:15px;}
 .foot-meta{font-size:12.5px;color:var(--muted);}
 .foot-links{display:flex;gap:18px;font-size:13px;color:var(--muted);}
+
+/* ---------- top contact bar ---------- */
+.contact-bar{background:var(--teal-deep);color:#fff;font-size:13.5px;}
+.contact-bar .wrap{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;padding:9px 24px;text-align:center;}
+.contact-bar a.phone-link{
+  display:inline-flex;align-items:center;gap:7px;color:#fff;font-weight:800;font-family:'Space Grotesk';
+  text-decoration:none;background:rgba(255,255,255,.14);padding:5px 14px;border-radius:999px;
+}
+.contact-bar a.phone-link:hover{background:rgba(255,255,255,.24);}
+.contact-bar span{color:rgba(255,255,255,.85);}
+@media(max-width:640px){.contact-bar .wrap{font-size:12.5px;padding:8px 16px;}}
+
+/* ---------- feedback / gop y section ---------- */
+.feedback{padding:56px 0;border-top:1px solid var(--line);}
+.feedback-box{
+  max-width:760px;margin:0 auto;background:#fff;border:1.5px solid var(--line);border-radius:18px;
+  padding:30px 32px;text-align:center;
+}
+.feedback-box h2{font-size:22px;margin-bottom:10px;}
+.feedback-box p{color:var(--muted);font-size:14.5px;max-width:560px;margin:0 auto 20px;}
+.feedback-box .reply-note{font-size:12.5px;color:var(--clay);margin-top:14px;font-weight:600;}
+/* ---------- changelog ---------- */
+.changelog{padding:56px 0;border-top:1px solid var(--line);}
+.changelog h2{font-size:24px;margin-bottom:24px;}
+.cl-item{display:flex;gap:18px;padding:14px 0;border-top:1px solid var(--line);}
+.cl-item:first-child{border-top:none;}
+.cl-ver{flex:0 0 auto;font-family:'Space Grotesk';font-weight:800;font-size:14px;color:#fff;background:var(--teal);padding:4px 11px;border-radius:999px;height:fit-content;white-space:nowrap;}
+.cl-body{flex:1;}
+.cl-date{font-size:12px;color:var(--muted);margin-bottom:4px;}
+.cl-desc{font-size:14px;color:var(--ink);line-height:1.6;}
 </style>
 </head>
 <body>
@@ -304,17 +366,25 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
       <a href="#gia">Bảng giá</a>
       <a href="#cai-dat">Cài đặt</a>
       <a href="#faq">Hỏi đáp</a>
+      <a href="#changelog">Nhật ký cập nhật</a>
     </nav>
     <a class="top-cta" href="#gia">Dùng thử miễn phí</a>
   </div>
 </header>
+
+<div class="contact-bar">
+  <div class="wrap">
+    <a class="phone-link" href="https://zalo.me/0868919790" target="_blank" rel="noopener">📞 0868.91.97.90</a>
+    <span>Hỗ trợ cài đặt <b style="color:#fff">miễn phí</b> · Dùng thử miễn phí ~5–10 phiếu trước khi quyết định mua</span>
+  </div>
+</div>
 
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow">● Dành cho hệ thống quanlyskcd.medinet.org.vn</div>
       <h1>Điền phiếu khám sức khoẻ <em>nhanh gấp 10 lần</em>, không cần gõ tay</h1>
-      <p class="lead">Tiện ích trình duyệt giúp nhân viên y tế điền tự động các mục lặp lại trong phiếu KSK người lớn và trẻ em dưới 6 tuổi — chỉ 1 cú bấm cho mỗi mục thay vì hàng chục thao tác chuột.</p>
+      <p class="lead">Tiện ích trình duyệt giúp nhân viên y tế điền tự động các mục lặp lại trong phiếu KSK người lớn, trẻ em dưới 6 tuổi và KSK lái xe — chỉ 1 cú bấm cho mỗi mục thay vì hàng chục thao tác chuột.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#gia">⏳ Dùng thử miễn phí — 5 Medi</a>
         <a class="btn btn-ghost" href="#cai-dat">Xem cách cài đặt</a>
@@ -366,9 +436,10 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
     <div class="feat-grid">
       <div class="feat"><div class="num">01</div><h3>KSK người lớn (M12–M14)</h3><p>Điền nhanh thị lực, thính lực, khám lâm sàng, hỏi bệnh người cao tuổi và kết luận thường gặp.</p></div>
       <div class="feat"><div class="num">02</div><h3>KSK trẻ em dưới 6 tuổi</h3><p>Tự động điền thông tin hành chính, tiền sử, hình thức chi trả và địa điểm khám theo đúng hợp đồng trường học.</p></div>
-      <div class="feat"><div class="num">03</div><h3>Xác nhận đã chọn đúng</h3><p>Không chỉ bấm — script kiểm tra lại trạng thái tick/chọn trước khi coi là hoàn tất, tránh báo thành công giả.</p></div>
-      <div class="feat"><div class="num">04</div><h3>Tự thử lại khi mạng chậm</h3><p>Danh sách xổ xuống tải bất đồng bộ vẫn được xử lý ổn định nhờ cơ chế tự thử lại trong vài giây.</p></div>
-      <div class="feat"><div class="num">05</div><h3>Cập nhật tự động</h3><p>Luôn dùng đúng bản mới nhất qua Tampermonkey, không cần cài lại thủ công mỗi lần nâng cấp.</p></div>
+      <div class="feat"><div class="num">03</div><h3>Khám sức khỏe lái xe</h3><p>Điền nhanh tiền sử, thông tin khám, phiếu cận lâm sàng và kết luận theo từng chuyên khoa cho phiếu KSK người lái xe/ô tô.</p></div>
+      <div class="feat"><div class="num">04</div><h3>Xác nhận đã chọn đúng</h3><p>Không chỉ bấm — script kiểm tra lại trạng thái tick/chọn trước khi coi là hoàn tất, tránh báo thành công giả.</p></div>
+      <div class="feat"><div class="num">05</div><h3>Tự thử lại khi mạng chậm</h3><p>Danh sách xổ xuống tải bất đồng bộ vẫn được xử lý ổn định nhờ cơ chế tự thử lại trong vài giây.</p></div>
+      <div class="feat"><div class="num">06</div><h3>Cập nhật tự động</h3><p>Luôn dùng đúng bản mới nhất qua Tampermonkey, không cần cài lại thủ công mỗi lần nâng cấp.</p></div>
     </div>
   </div>
 </section>
@@ -456,23 +527,25 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
         </ul>
         <button class="btn btn-primary" onclick="document.getElementById('buyBox').classList.toggle('open')">💳 Nạp ngay</button>
         <div class="pay-box" id="buyBox">
-          <b>Bước 1.</b> Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") — popup hiện sẵn <b>Mã máy</b> của bạn, dạng <code>MID-XXXXXXXX</code>. Sao chép mã đó và dán vào ô dưới đây để tạo QR đúng thông tin.
+          <b>Bước 1.</b> Mở popup <b>Ví Medi</b> ngay trong script (bấm nút "Thao tác nhanh" bất kỳ → "Quản lý Ví Medi") — popup hiện sẵn <b>Mã máy</b> của bạn, dạng <code>MID-XXXXXXXX</code>. Sao chép mã đó và dán vào ô dưới đây.
           <div class="mid-input-row">
             <label for="mttMidInput">Mã máy của bạn</label>
             <div class="mid-input-wrap">
               <input type="text" id="mttMidInput" placeholder="VD: MID-A1B2C3D4" maxlength="13" autocomplete="off" spellcheck="false" oninput="mttOnMidInput(this)">
               <button type="button" id="mttMidPasteBtn" onclick="mttPasteMid()">Dán</button>
             </div>
-            <div class="mid-input-hint" id="mttMidHint">Nhập đúng định dạng <code>MID-</code> + 8 ký tự để tạo mã QR.</div>
+            <div class="mid-input-hint" id="mttMidHint">Nhập đúng định dạng <code>MID-</code> + 8 ký tự.</div>
           </div>
 
+          <div style="margin-top:14px"><b>Bước 2.</b> Điền Số điện thoại Zalo và Tên của bạn (đều bắt buộc, để hỗ trợ/bảo hành sau này).</div>
           <div class="contact-box">
-            <div class="contact-title">📞 Thông tin liên hệ (để hỗ trợ/bảo hành sau này)</div>
-            <input type="tel" id="mttContactPhone" placeholder="Số điện thoại (bắt buộc để tạo QR)" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
-            <input type="text" id="mttContactName" placeholder="Tên của bạn (không bắt buộc)" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
-            <input type="text" id="mttContactZalo" placeholder="Zalo (nếu khác SĐT, không bắt buộc)" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
-            <div class="contact-hint" id="mttContactHint">Nhập Số điện thoại để mở khoá chọn mức nạp và tạo mã QR bên dưới.</div>
+            <div class="contact-title">📞 Thông tin liên hệ (bắt buộc)</div>
+            <input type="tel" id="mttContactPhone" placeholder="Số điện thoại Zalo" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
+            <input type="text" id="mttContactName" placeholder="Tên của bạn" oninput="mttOnContactInput()" onblur="mttOnContactInput()">
+            <div class="contact-hint" id="mttContactHint">Điền Số điện thoại Zalo và Tên để mở khoá chọn mức nạp và tạo mã QR bên dưới.</div>
           </div>
+
+          <div style="margin-top:14px"><b>Bước 3.</b> Chọn mức nạp bên dưới — mã QR hiện ra sẽ tự ghi đúng số tiền và Mã máy, chỉ cần mở app ngân hàng quét là xong.</div>
 
           <div id="mttGatedArea" class="gated">
           <div class="amt-tabs" role="tablist" aria-label="Chọn mức nạp">
@@ -482,9 +555,16 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
             <button type="button" class="amt-tab" data-amt="2000000" onclick="mttSetAmt(this)">2.000.000đ<span>1.150 Medi (+15%)</span></button>
           </div>
           <div id="mttQrPlaceholder" class="qr-placeholder">🔒 Nhập Mã máy ở trên để tạo mã QR chuyển khoản</div>
-          <img id="mttQrImg" alt="QR chuyển khoản" style="display:none" onerror="this.style.display='none'">
-          <div class="amt-note">QR sẽ ghi sẵn đúng số tiền và <b>Mã máy</b> bạn vừa nhập vào nội dung chuyển khoản — chuyển đúng như QR để hệ thống tự nhận diện.</div>
+          <div class="qr-zoom-wrap" id="mttQrZoomWrap" style="display:none">
+            <img id="mttQrImg" alt="QR chuyển khoản" style="width:200px;height:200px;border-radius:10px;border:1px solid var(--line);display:block" onerror="this.style.display='none'">
+            <button type="button" class="qr-zoom-btn" title="Phóng to QR" onclick="mttOpenQrZoom()">🔍</button>
+          </div>
+          <div class="amt-note">QR sẽ ghi sẵn đúng số tiền và <b>Mã máy</b> bạn vừa nhập vào nội dung chuyển khoản — chuyển đúng như QR để hệ thống tự nhận diện. Rê chuột vào QR và bấm 🔍 nếu cần xem to hơn để quét.</div>
           </div><!-- /mttGatedArea -->
+          <div class="qr-zoom-overlay" id="mttQrZoomOverlay" onclick="mttCloseQrZoom()">
+            <img id="mttQrZoomImg" alt="QR chuyển khoản phóng to">
+            <div class="qr-zoom-hint">Bấm vào bất kỳ đâu để đóng</div>
+          </div>
           <script>
             var MTT_AMT = 100000;
             // Cung URL Worker voi Medinet_user.js / Medinet_Wallet_Admin.html.
@@ -503,21 +583,30 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
             function mttRenderQr(){
               var mid = (document.getElementById('mttMidInput').value || '').trim().toUpperCase();
               var img = document.getElementById('mttQrImg');
+              var zoomWrap = document.getElementById('mttQrZoomWrap');
               var ph = document.getElementById('mttQrPlaceholder');
               var ok = /^MID-[0-9A-F]{8}$/.test(mid);
-              if (ok && mttIsPhoneValid()) {
-                img.src = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + MTT_AMT + '&addInfo=' + encodeURIComponent(mid);
-                img.style.display = 'block';
+              if (ok && mttIsPhoneValid() && mttIsNameValid()) {
+                var qrUrl = 'https://img.vietqr.io/image/BIDV-96247MEDINET-compact2.png?amount=' + MTT_AMT + '&addInfo=' + encodeURIComponent(mid);
+                img.src = qrUrl;
+                document.getElementById('mttQrZoomImg').src = qrUrl;
+                zoomWrap.style.display = 'block';
                 ph.style.display = 'none';
                 // Bao truoc cho Worker biet khach dang chuan bi chuyen khoan
                 // (tao 1 don "Cho thanh toan" de Admin theo doi) - khong
                 // anh huong QR/trai nghiem neu goi that bai.
                 mttReportPendingOrder(mid, parseInt(MTT_AMT, 10));
               } else {
-                img.style.display = 'none';
+                zoomWrap.style.display = 'none';
                 ph.style.display = 'block';
               }
               return ok;
+            }
+            function mttOpenQrZoom(){
+              document.getElementById('mttQrZoomOverlay').classList.add('open');
+            }
+            function mttCloseQrZoom(){
+              document.getElementById('mttQrZoomOverlay').classList.remove('open');
             }
 
             // ================================================================
@@ -533,6 +622,10 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
               var v = (document.getElementById('mttContactPhone').value || '').trim();
               return /^[0-9+ ]{8,15}$/.test(v);
             }
+            function mttIsNameValid(){
+              var v = (document.getElementById('mttContactName').value || '').trim();
+              return v.length >= 2;
+            }
             function mttSetGateEnabled(enabled){
               var gate = document.getElementById('mttGatedArea');
               if (enabled) gate.classList.remove('gated'); else gate.classList.add('gated');
@@ -540,22 +633,21 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
             function mttOnContactInput(){
               var phone = (document.getElementById('mttContactPhone').value || '').trim();
               var name = (document.getElementById('mttContactName').value || '').trim();
-              var zalo = (document.getElementById('mttContactZalo').value || '').trim();
               var hint = document.getElementById('mttContactHint');
-              var ok = mttIsPhoneValid();
+              var ok = mttIsPhoneValid() && mttIsNameValid();
               mttSetGateEnabled(ok);
               hint.textContent = ok
                 ? '✓ Đã đủ điều kiện tạo mã QR — chọn mức nạp và nhập Mã máy bên trên.'
-                : 'Nhập Số điện thoại để mở khoá chọn mức nạp và tạo mã QR bên dưới.';
+                : 'Điền Số điện thoại Zalo và Tên để mở khoá chọn mức nạp và tạo mã QR bên dưới.';
               hint.className = ok ? 'contact-hint ok' : 'contact-hint';
-              try { localStorage.setItem(CONTACT_STORE_KEY, JSON.stringify({ phone: phone, name: name, zalo: zalo })); } catch(e){}
+              try { localStorage.setItem(CONTACT_STORE_KEY, JSON.stringify({ phone: phone, name: name })); } catch(e){}
               var mid = (document.getElementById('mttMidInput').value || '').trim().toUpperCase();
               if (ok && /^MID-[0-9A-F]{8}$/.test(mid) && mttContactRegisteredFor !== (mid + '|' + phone)) {
                 mttContactRegisteredFor = mid + '|' + phone;
                 fetch(MTT_WALLET_API + '/customer/register', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ mid: mid, phone: phone, name: name, zalo: zalo })
+                  body: JSON.stringify({ mid: mid, phone: phone, name: name })
                 }).catch(function(){});
               }
               mttRenderQr();
@@ -566,9 +658,8 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
                 var saved = JSON.parse(localStorage.getItem(CONTACT_STORE_KEY) || '{}');
                 if (saved.phone) document.getElementById('mttContactPhone').value = saved.phone;
                 if (saved.name) document.getElementById('mttContactName').value = saved.name;
-                if (saved.zalo) document.getElementById('mttContactZalo').value = saved.zalo;
               } catch(e){}
-              mttSetGateEnabled(mttIsPhoneValid());
+              mttSetGateEnabled(mttIsPhoneValid() && mttIsNameValid());
             })();
             function mttOnMidInput(inp){
               var hint = document.getElementById('mttMidHint');
@@ -635,7 +726,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
       <div class="step">
         <div class="s-num">2</div>
         <h3>Cài script Medinet</h3>
-        <p>Bấm vào <a href="https://raw.githubusercontent.com/Guitar72/medinet-autofill/refs/heads/main/Medinet.user.js" target="_blank" rel="noopener"><b>liên kết cài đặt</b></a>, Tampermonkey sẽ tự mở trang xác nhận cài.</p>
+        <p>Bấm vào <a href="https://raw.githubusercontent.com/Guitar72/medinet-autofill/refs/heads/main/Medinet.user.js" target="_blank" rel="noopener"><b>liên kết cài đặt</b></a>, Tampermonkey sẽ tự mở trang xác nhận cài. Bản mới nhất: <b data-mtt-version>đang tải…</b></p>
       </div>
       <div class="step">
         <div class="s-num">3</div>
@@ -690,6 +781,118 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
   </div>
 </section>
 
+
+<section class="changelog" id="changelog">
+  <div class="wrap">
+    <div class="section-tag">Nhật ký cập nhật <span id="clSyncBadge" style="display:none;font-weight:700;color:var(--teal-deep);text-transform:none;letter-spacing:0">· tự động lấy từ script mới nhất</span></div>
+    <h2>Changelog <span id="clVersionBadge" style="display:none;font-size:13px;vertical-align:middle;background:var(--teal);color:#fff;padding:3px 10px;border-radius:999px;font-weight:700;margin-left:8px"></span></h2>
+    <div id="clList">
+    <div class="cl-item">
+      <div class="cl-ver">12.4</div>
+      <div class="cl-body">
+        <div class="cl-date">07/09/2026</div>
+        <div class="cl-desc">Thêm tính năng KSK lái xe lên trang giới thiệu · Popup Ví Medi bắt buộc điền cả Số điện thoại Zalo và Tên mới mở khoá tạo QR (bỏ ô Zalo riêng) · Thêm nút phóng to QR khi rê chuột, bấm để xem QR to hơn dễ quét.</div>
+      </div>
+    </div>
+    <div class="cl-item">
+      <div class="cl-ver">12.3</div>
+      <div class="cl-body">
+        <div class="cl-date">03/09/2026</div>
+        <div class="cl-desc">Sửa lỗi trừ dư Medi khi bấm lại nút trên trang đã điền (Tiền sử khám thực thể, Thông tin hành chính, M2) · Không tính phí khi thao tác không tìm thấy mục để chọn.</div>
+      </div>
+    </div>
+    <div class="cl-item">
+      <div class="cl-ver">12.2</div>
+      <div class="cl-body">
+        <div class="cl-date">03/09/2026</div>
+        <div class="cl-desc">Sửa lỗi trừ dư khi tick checkbox/radio/ô số đã điền sẵn · Sửa lỗi số dư hiển thị sai (vọt lên) sau khi F5 do request trừ Medi bị huỷ khi chuyển trang.</div>
+      </div>
+    </div>
+    </div>
+    <div id="clFallbackNote" style="display:none;font-size:12px;color:var(--muted);margin-top:16px">⚠️ Không lấy được changelog mới nhất từ script (mạng chặn hoặc lỗi tải) — đang hiển thị bản ghi thủ công gần nhất.</div>
+  </div>
+</section>
+
+<script>
+// ================================================================
+// Dong bo Changelog + so version tu chinh file Medinet.user.js tren
+// GitHub (nguon "that" duy nhat) - moi lan trang duoc mo se tu fetch
+// ban raw moi nhat, parse khoi ==Changelog==...==/Changelog== va
+// @version trong header, roi dung de dung lai #clList/#clVersionBadge.
+// Neu fetch/parse loi (mat mang, doi cau truc...) thi GIU NGUYEN noi
+// dung tinh (fallback) da viet san trong HTML, khong xoa trang.
+// ================================================================
+(function () {
+  var RAW_SCRIPT_URL = 'https://raw.githubusercontent.com/Guitar72/medinet-autofill/refs/heads/main/Medinet.user.js';
+
+  function parseChangelog(text) {
+    var verMatch = text.match(/@version\s+([\S]+)/);
+    var clMatch = text.match(/\/\/\s*==Changelog==([\s\S]*?)\/\/\s*==\/Changelog==/);
+    if (!clMatch) return null;
+    var lines = clMatch[1].split('\n')
+      .map(function (l) { return l.replace(/^\s*\/\/\s?/, '').trim(); })
+      .filter(function (l) { return l.indexOf('|') !== -1; });
+    var entries = lines.map(function (l) {
+      var parts = l.split('|').map(function (p) { return p.trim(); });
+      return { ver: parts[0] || '', date: parts[1] || '', desc: parts.slice(2).join('|').trim() };
+    }).filter(function (e) { return e.ver && e.desc; });
+    if (!entries.length) return null;
+    return { version: verMatch ? verMatch[1] : (entries[0] && entries[0].ver), entries: entries };
+  }
+
+  function formatDate(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    return m ? (m[3] + '/' + m[2] + '/' + m[1]) : iso;
+  }
+
+  function render(data) {
+    var list = document.getElementById('clList');
+    if (!list) return;
+    list.innerHTML = data.entries.map(function (e) {
+      return '<div class="cl-item">' +
+        '<div class="cl-ver">' + e.ver + '</div>' +
+        '<div class="cl-body">' +
+        '<div class="cl-date">' + formatDate(e.date) + '</div>' +
+        '<div class="cl-desc">' + e.desc.replace(/•/g, '·') + '</div>' +
+        '</div></div>';
+    }).join('');
+    var syncBadge = document.getElementById('clSyncBadge');
+    if (syncBadge) syncBadge.style.display = 'inline';
+    var verBadge = document.getElementById('clVersionBadge');
+    if (verBadge && data.version) { verBadge.textContent = 'v' + data.version; verBadge.style.display = 'inline-block'; }
+    document.querySelectorAll('[data-mtt-version]').forEach(function (el) {
+      el.textContent = 'v' + data.version;
+    });
+  }
+
+  fetch(RAW_SCRIPT_URL, { cache: 'no-store' })
+    .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.text(); })
+    .then(function (text) {
+      var data = parseChangelog(text);
+      if (data) { render(data); } else { throw new Error('parse failed'); }
+    })
+    .catch(function () {
+      var note = document.getElementById('clFallbackNote');
+      if (note) note.style.display = 'block';
+      // Khong lay duoc ban moi nhat: hien phien ban tinh (fallback) da
+      // ghi san trong HTML thay vi de mai chu "dang tai...".
+      document.querySelectorAll('[data-mtt-version]').forEach(function (el) {
+        el.textContent = 'v12.4 (chưa xác nhận online)';
+      });
+    });
+})();
+</script>
+
+<section class="feedback">
+  <div class="wrap">
+    <div class="feedback-box">
+      <h2>💬 Có góp ý hay muốn bổ sung tính năng?</h2>
+      <p>Mọi ý kiến đóng góp, báo lỗi, hay muốn đề xuất bổ sung chức năng mới, xin liên hệ trực tiếp qua Zalo — mình chủ yếu dùng Zalo để trả lời khách.</p>
+      <a class="btn btn-primary" href="https://zalo.me/0868919790" target="_blank" rel="noopener">💬 Nhắn Zalo 0868.91.97.90</a>
+      <div class="reply-note">⏱️ Sẽ phản hồi sớm nhất trong ngày — mong thông cảm nếu trả lời chậm vì đang khá bận.</div>
+    </div>
+  </div>
+</section>
 
 <footer>
   <div class="wrap foot-row">
