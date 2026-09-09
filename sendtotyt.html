@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danh sách liên hệ các TYT thuộc TP.HCM — Quảng cáo MedinetAutofill</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0b1f2b;
+  --paper:#f4f7f5;
+  --card:#ffffff;
+  --teal:#0f6659;
+  --teal-deep:#0a473e;
+  --clay:#c9713f;
+  --line:#dbe4df;
+  --muted:#5c6b66;
+  --fb:#1877F2;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Manrope',sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;padding-bottom:60px;}
+h1,.mono{font-family:'Space Grotesk',monospace;}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px;}
+
+header{position:sticky;top:0;z-index:10;background:rgba(244,247,245,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:16px 0;}
+header .wrap{display:flex;flex-direction:column;gap:10px;}
+header h1{font-size:19px;letter-spacing:-.01em;}
+.back{font-size:13px;color:var(--muted);text-decoration:none;}
+.back:hover{color:var(--ink);}
+.stats{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);align-items:center;}
+.stats b{color:var(--teal-deep);}
+.progressbar{flex:1;min-width:120px;height:8px;border-radius:99px;background:var(--line);overflow:hidden;}
+.progressbar > div{height:100%;background:var(--teal);width:0%;transition:width .3s;}
+.syncbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 10px;border-radius:999px;background:#e2efe9;color:var(--teal-deep);border:1px solid #c7ddd2;white-space:nowrap;}
+.syncbadge.offline{background:#fbeceb;color:#b3453a;border-color:#f1cfcc;}
+.syncbadge.syncing{background:#fff4e5;color:#9a5b12;border-color:#f2debb;}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:14px 0 0;}
+.toolbar input[type=search]{flex:1;min-width:180px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;}
+.toolbar button{padding:9px 14px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink);}
+.toolbar button:hover{border-color:var(--teal);color:var(--teal-deep);}
+.toolbar button.danger:hover{border-color:#b3453a;color:#b3453a;}
+
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;margin-top:18px;box-shadow:0 1px 0 var(--line);}
+thead th{background:var(--ink);color:#fff;text-align:left;font-size:12.5px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;padding:12px 14px;}
+th.col-stt{width:56px;text-align:center;}
+th.col-contact{width:100px;text-align:center;}
+th.col-fb{width:150px;text-align:center;}
+tbody tr{border-top:1px solid var(--line);transition:background .15s;}
+tbody tr:hover{background:#f7faf8;}
+tbody tr.done{background:#eef7f2;}
+tbody td{padding:11px 14px;font-size:14.5px;vertical-align:middle;}
+td.stt{text-align:center;color:var(--muted);font-family:'Space Grotesk';font-weight:600;font-size:13px;}
+td.name{font-weight:600;}
+tr.done td.name{color:var(--teal-deep);}
+td.contact{text-align:center;}
+td.fbcell{text-align:center;}
+.chk{
+  appearance:none;-webkit-appearance:none;
+  width:22px;height:22px;border-radius:6px;border:2px solid var(--line);
+  cursor:pointer;position:relative;background:#fff;transition:.15s;
+}
+.chk:checked{background:var(--teal);border-color:var(--teal);}
+.chk:checked::after{
+  content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);
+}
+.fb-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--fb);color:#fff;border:none;border-radius:8px;
+  padding:7px 12px;font-family:inherit;font-size:12.5px;font-weight:700;
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+}
+.fb-btn:hover{opacity:.9;}
+.fb-btn svg{width:14px;height:14px;fill:#fff;flex:0 0 auto;}
+.empty{padding:30px;text-align:center;color:var(--muted);font-size:14px;}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:30px 0 10px;}
+footer button.link{background:none;border:none;color:var(--teal-deep);text-decoration:underline;cursor:pointer;font-size:12px;font-family:inherit;}
+
+/* ---------- modal cấu hình đồng bộ ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(11,31,43,.5);
+  display:none;align-items:center;justify-content:center;z-index:100;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:16px;padding:26px;max-width:440px;width:100%;box-shadow:0 30px 60px -20px rgba(11,31,43,.4);}
+.modal h2{font-size:17px;margin-bottom:10px;}
+.modal p{font-size:13.5px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
+.modal label{display:block;font-size:12.5px;font-weight:700;margin-bottom:5px;color:var(--ink);}
+.modal input{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:13.5px;font-family:inherit;margin-bottom:14px;}
+.modal .row{display:flex;gap:10px;justify-content:flex-end;}
+.modal button{padding:9px 16px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
+.modal button.primary{background:var(--teal);border-color:var(--teal);color:#fff;}
+.modal button.primary:hover{opacity:.92;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div>
+      <a class="back" href="./">← Về trang Medinet Autofill</a>
+    </div>
+    <h1>DANH SÁCH LIÊN HỆ CÁC TYT THUỘC TP. HCM<br><span style="font-weight:400;font-size:13px;color:var(--muted)">Quảng cáo Medinet Autofill</span></h1>
+    <div class="stats">
+      <span><b id="doneCount">0</b>/<span id="totalCount">0</span> đã liên hệ</span>
+      <div class="progressbar"><div id="progressFill"></div></div>
+      <span class="syncbadge" id="syncBadge">⏳ Đang tải…</span>
+    </div>
+    <div class="toolbar">
+      <input type="search" id="searchBox" placeholder="Tìm tên trạm y tế…">
+      <button id="btnClearFilter" type="button">Xóa tìm kiếm</button>
+      <button id="btnUncheckAll" class="danger" type="button">Bỏ tick tất cả</button>
+      <button id="btnSyncCfg" type="button">⚙️ Cấu hình đồng bộ</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <table id="tytTable">
+    <thead>
+      <tr>
+        <th class="col-stt">STT</th>
+        <th>Tên trạm y tế</th>
+        <th class="col-contact">Đã liên hệ</th>
+        <th class="col-fb">Facebook</th>
+      </tr>
+    </thead>
+    <tbody id="tytBody"></tbody>
+  </table>
+  <div id="emptyMsg" class="empty" style="display:none;">Không tìm thấy trạm y tế phù hợp.</div>
+</div>
+
+<footer>
+  Trạng thái đồng bộ nhiều thiết bị qua Cloudflare. Nếu mất mạng, dữ liệu vẫn lưu tạm trên máy và tự đồng bộ lại khi có mạng.
+  <br><button class="link" id="btnSyncCfg2" type="button">Thiết lập / đổi máy chủ đồng bộ</button>
+</footer>
+
+<!-- Modal cấu hình đồng bộ -->
+<div class="modal-overlay" id="cfgModal">
+  <div class="modal">
+    <h2>⚙️ Cấu hình đồng bộ (Cloudflare)</h2>
+    <p>Dán URL Cloudflare Worker và mã token bạn đã thiết lập (xem hướng dẫn kèm theo file <code>worker.js</code>). Thông tin này chỉ lưu trên trình duyệt của bạn.</p>
+    <label for="cfgUrl">Worker URL</label>
+    <input type="text" id="cfgUrl" placeholder="https://tyt-sync.ten-subdomain.workers.dev">
+    <label for="cfgToken">Token</label>
+    <input type="text" id="cfgToken" placeholder="token bí mật của bạn">
+    <div class="row">
+      <button id="cfgSkip" type="button">Chỉ dùng máy này (bỏ qua)</button>
+      <button id="cfgSave" class="primary" type="button">Lưu & đồng bộ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var TYT_LIST = ["Trạm Y tế Tân Định", "Trạm Y tế Sài Gòn", "Trạm Y tế Bến Thành", "Trạm Y tế Cầu Ông Lãnh", "Trạm Y tế Bàn Cờ", "Trạm Y tế Xuân Hòa", "Trạm Y tế Nhiêu Lộc", "Trạm Y tế Vĩnh Hội", "Trạm Y tế Khánh Hội", "Trạm Y tế Xóm Chiếu", "Trạm Y tế Chợ Quán", "Trạm Y tế An Đông", "Trạm Y tế Chợ Lớn", "Trạm Y tế Bình Tiên", "Trạm Y tế Bình Tây", "Trạm Y tế Bình Phú", "Trạm Y tế Phú Lâm", "Trạm Y tế Phú Thuận", "Trạm Y tế Tân Mỹ", "Trạm Y tế Tân Thuận", "Trạm Y tế Tân Hưng", "Trạm Y tế Chánh Hưng", "Trạm Y tế Bình Đông", "Trạm Y tế Phú Định", "Trạm Y tế Diên Hồng", "Trạm Y tế Hòa Hưng", "Trạm Y tế Vườn Lài", "Trạm Y tế Minh Phụng", "Trạm Y tế Bình Thới", "Trạm Y tế Hòa Bình", "Trạm Y tế Phú Thọ", "Trạm Y tế An Phú Đông", "Trạm Y tế Thới An", "Trạm Y tế Tân Thới Hiệp", "Trạm Y tế Trung Mỹ Tây", "Trạm Y tế Đông Hưng Thuận", "Trạm Y tế An Lạc", "Trạm Y tế Tân Tạo", "Trạm Y tế Bình Trị Đông", "Trạm Y tế Bình Hưng Hòa", "Trạm Y tế Bình Tân", "Trạm Y tế Gia Định", "Trạm Y tế Bình Lợi Trung", "Trạm Y tế Bình Thạnh", "Trạm Y tế Thạnh Mỹ Tây", "Trạm Y tế Bình Quới", "Trạm Y tế Hạnh Thông", "Trạm Y tế An Nhơn", "Trạm Y tế Gò Vấp", "Trạm Y tế Thông Tây Hội", "Trạm Y tế An Hội Tây", "Trạm Y tế An Hội Đông", "Trạm Y tế Đức Nhuận", "Trạm Y tế Cầu Kiệu", "Trạm Y tế Phú Nhuận", "Trạm Y tế Tân Sơn Hòa", "Trạm Y tế Tân Sơn Nhất", "Trạm Y tế Tân Hòa", "Trạm Y tế Bảy Hiền", "Trạm Y tế Tân Bình", "Trạm Y tế Tân Sơn", "Trạm Y tế Tây Thạnh", "Trạm Y tế Tân Sơn Nhì", "Trạm Y tế Phú Thọ Hòa", "Trạm Y tế Phú Thạnh", "Trạm Y tế Tân Phú", "Trạm Y tế An Khánh", "Trạm Y tế Bình Trưng", "Trạm Y tế Cát Lái", "Trạm Y tế Linh Xuân", "Trạm Y tế Tam Bình", "Trạm Y tế Thủ Đức", "Trạm Y tế Hiệp Bình", "Trạm Y tế Long Bình", "Trạm Y tế Long Phước", "Trạm Y tế Long Trường", "Trạm Y tế Phước Long", "Trạm Y tế Tăng Nhơn Phú", "Trạm Y tế Bình Hưng", "Trạm Y tế Hưng Long", "Trạm Y tế Bình Chánh", "Trạm Y tế Tân Nhựt", "Trạm Y tế Bình Lợi", "Trạm Y tế Vĩnh Lộc", "Trạm Y tế Tân Vĩnh Lộc", "Trạm Y tế Bình Khánh", "Trạm Y tế An Thới Đông", "Trạm Y tế Cần Giờ", "Trạm Y tế Thạnh An", "Trạm Y tế Tân An Hội", "Trạm Y tế Củ Chi", "Trạm Y tế Phú Hòa Đông", "Trạm Y tế Nhuận Đức", "Trạm Y tế An Nhơn Tây", "Trạm Y tế Thái Mỹ", "Trạm Y tế Bình Mỹ", "Trạm Y tế Hóc Môn", "Trạm Y tế Bà Điểm", "Trạm Y tế Đông Thạnh", "Trạm Y tế Xuân Thới Sơn", "Trạm Y tế Nhà Bè", "Trạm Y tế Hiệp Phước", "Trạm Y tế Dĩ An", "Trạm Y tế Đông Hòa", "Trạm Y tế Tân Đông Hiệp", "Trạm Y tế Thuận Giao", "Trạm Y tế Thuận An", "Trạm Y tế Lái Thiêu", "Trạm Y tế Bình Hòa", "Trạm Y tế An Phú", "Trạm Y tế Bình Dương", "Trạm Y tế Chánh Hiệp", "Trạm Y tế Thủ Dầu Một", "Trạm Y tế Phú Lợi", "Trạm Y tế Phú An", "Trạm Y tế Vĩnh Tân", "Trạm Y tế Bình Cơ", "Trạm Y tế Tân Uyên", "Trạm Y tế Tân Hiệp", "Trạm Y tế Tân Khánh", "Trạm Y tế Tây Nam", "Trạm Y tế Long Nguyên", "Trạm Y tế Bến Cát", "Trạm Y tế Chánh Phú Hòa", "Trạm Y tế Thới Hòa", "Trạm Y tế Hòa Lợi", "Trạm Y tế Bắc Tân Uyên", "Trạm Y tế Thường Tân", "Trạm Y tế Phú Giáo", "Trạm Y tế Phước Hòa", "Trạm Y tế Phước Thành", "Trạm Y tế An Long", "Trạm Y tế Bàu Bàng", "Trạm Y tế Trừ Văn Thố", "Trạm Y tế Long Hòa", "Trạm Y tế Thanh An", "Trạm Y tế Minh Thạnh", "Trạm Y tế Dầu Tiếng", "Trạm Y tế Vũng Tàu", "Trạm Y tế Tam Thắng", "Trạm Y tế Rạch Dừa", "Trạm Y tế Phước Thắng", "Trạm Y tế Long Sơn", "Trạm Y tế Bà Rịa", "Trạm Y tế Tam Long", "Trạm Y tế Long Hương", "Trạm Y tế Phú Mỹ", "Trạm Y tế Tân Phước", "Trạm Y tế Tân Hải", "Trạm Y tế Tân Thành", "Trạm Y tế Châu Pha", "Trạm Y tế Long Hải", "Trạm Y tế Long Điền", "Trạm Y tế Phước Hải", "Trạm Y tế Đất Đỏ", "Trạm Y tế Hồ Tràm", "Trạm Y tế Hòa Hội", "Trạm Y tế Bàu Lâm", "Trạm Y tế Xuyên Mộc", "Trạm Y tế Bình Châu", "Trạm Y tế Hòa Hiệp", "Trạm Y tế Ngãi Giao", "Trạm Y tế Kim Long", "Trạm Y tế Châu Đức", "Trạm Y tế Nghĩa Thành", "Trạm Y tế Bình Giã", "Trạm Y tế Xuân Sơn", "Trạm Y tế Quân dân y đặc khu Côn Đảo"];
+
+var LOCAL_KEY = 'mtt_tyt_contacted_v1';
+var CFG_KEY = 'mtt_tyt_sync_cfg_v1'; // { url, token }
+
+function loadLocalState(){
+  try{ var raw = localStorage.getItem(LOCAL_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch(e){ return {}; }
+}
+function saveLocalState(state){
+  try{ localStorage.setItem(LOCAL_KEY, JSON.stringify(state)); }catch(e){}
+}
+function loadCfg(){
+  try{ var raw = localStorage.getItem(CFG_KEY); return raw ? JSON.parse(raw) : null; }
+  catch(e){ return null; }
+}
+function saveCfg(cfg){
+  try{ localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }catch(e){}
+}
+
+var state = loadLocalState();
+var cfg = loadCfg();
+var syncBadge = document.getElementById('syncBadge');
+var pendingSave = null;
+
+function setBadge(mode, text){
+  syncBadge.className = 'syncbadge' + (mode === 'offline' ? ' offline' : mode === 'syncing' ? ' syncing' : '');
+  syncBadge.textContent = text;
+}
+
+function apiHeaders(){
+  return { 'Content-Type': 'application/json', 'X-Auth-Token': cfg ? cfg.token : '' };
+}
+
+function pullRemote(){
+  if(!cfg || !cfg.url){
+    setBadge('offline', '💾 Chỉ lưu trên máy này');
+    return Promise.resolve();
+  }
+  setBadge('syncing', '⏳ Đang đồng bộ…');
+  return fetch(cfg.url.replace(/\/$/,'') + '/state', { headers: apiHeaders() })
+    .then(function(res){
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .then(function(remote){
+      state = remote || {};
+      saveLocalState(state);
+      setBadge('online', '☁️ Đã đồng bộ');
+      renderAllChecks();
+      updateStats();
+    })
+    .catch(function(err){
+      setBadge('offline', '⚠️ Không kết nối được máy chủ — dùng dữ liệu trên máy');
+    });
+}
+
+function pushRemote(){
+  if(!cfg || !cfg.url) return;
+  if(pendingSave) clearTimeout(pendingSave);
+  pendingSave = setTimeout(function(){
+    setBadge('syncing', '⏳ Đang lưu…');
+    fetch(cfg.url.replace(/\/$/,'') + '/state', {
+      method: 'POST',
+      headers: apiHeaders(),
+      body: JSON.stringify(state)
+    }).then(function(res){
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      setBadge('online', '☁️ Đã đồng bộ');
+    }).catch(function(){
+      setBadge('offline', '⚠️ Lưu tạm trên máy, sẽ thử lại sau');
+    });
+  }, 500);
+}
+
+var tbody = document.getElementById('tytBody');
+var totalCountEl = document.getElementById('totalCount');
+var doneCountEl = document.getElementById('doneCount');
+var progressFill = document.getElementById('progressFill');
+var searchBox = document.getElementById('searchBox');
+var emptyMsg = document.getElementById('emptyMsg');
+
+totalCountEl.textContent = TYT_LIST.length;
+
+function rowKey(idx){ return String(idx + 1); }
+
+function fbSearchUrl(name){
+  var q = encodeURIComponent(name);
+  // fb://search mở app trên iOS/Android nếu đã cài; web link dùng làm phương án dự phòng.
+  return { web: 'https://www.facebook.com/search/top?q=' + q, app: 'fb://search/?q=' + q };
+}
+
+function openFacebookSearch(name){
+  var urls = fbSearchUrl(name);
+  var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile){
+    // Thử mở app trước; nếu sau ~800ms trang vẫn còn hiển thị (app không mở được) thì chuyển sang web.
+    var fallback = setTimeout(function(){
+      window.location.href = urls.web;
+    }, 800);
+    window.addEventListener('pagehide', function(){ clearTimeout(fallback); }, { once: true });
+    window.location.href = urls.app;
+  } else {
+    window.open(urls.web, '_blank', 'noopener');
+  }
+}
+
+function buildRows(){
+  var frag = document.createDocumentFragment();
+  TYT_LIST.forEach(function(name, i){
+    var key = rowKey(i);
+    var tr = document.createElement('tr');
+    tr.dataset.key = key;
+    tr.dataset.name = name.toLowerCase();
+    if(state[key]) tr.classList.add('done');
+
+    var tdStt = document.createElement('td');
+    tdStt.className = 'stt';
+    tdStt.textContent = (i + 1);
+
+    var tdName = document.createElement('td');
+    tdName.className = 'name';
+    tdName.textContent = name;
+
+    var tdContact = document.createElement('td');
+    tdContact.className = 'contact';
+    var chk = document.createElement('input');
+    chk.type = 'checkbox';
+    chk.className = 'chk';
+    chk.checked = !!state[key];
+    chk.addEventListener('change', function(){
+      if(chk.checked){ state[key] = true; tr.classList.add('done'); }
+      else { delete state[key]; tr.classList.remove('done'); }
+      saveLocalState(state);
+      updateStats();
+      pushRemote();
+    });
+    tdContact.appendChild(chk);
+
+    var tdFb = document.createElement('td');
+    tdFb.className = 'fbcell';
+    var fbBtn = document.createElement('button');
+    fbBtn.type = 'button';
+    fbBtn.className = 'fb-btn';
+    fbBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg> Tìm Facebook';
+    fbBtn.addEventListener('click', function(){ openFacebookSearch(name); });
+    tdFb.appendChild(fbBtn);
+
+    tr.appendChild(tdStt);
+    tr.appendChild(tdName);
+    tr.appendChild(tdContact);
+    tr.appendChild(tdFb);
+    frag.appendChild(tr);
+  });
+  tbody.appendChild(frag);
+}
+
+function renderAllChecks(){
+  Array.prototype.forEach.call(tbody.children, function(tr){
+    var key = tr.dataset.key;
+    var chk = tr.querySelector('.chk');
+    var on = !!state[key];
+    chk.checked = on;
+    tr.classList.toggle('done', on);
+  });
+}
+
+function updateStats(){
+  var done = Object.keys(state).filter(function(k){ return state[k]; }).length;
+  doneCountEl.textContent = done;
+  var pct = TYT_LIST.length ? Math.round(done / TYT_LIST.length * 100) : 0;
+  progressFill.style.width = pct + '%';
+}
+
+function applyFilter(){
+  var q = searchBox.value.trim().toLowerCase();
+  var visible = 0;
+  Array.prototype.forEach.call(tbody.children, function(tr){
+    var match = !q || tr.dataset.name.indexOf(q) !== -1;
+    tr.style.display = match ? '' : 'none';
+    if(match) visible++;
+  });
+  emptyMsg.style.display = visible === 0 ? 'block' : 'none';
+}
+
+searchBox.addEventListener('input', applyFilter);
+document.getElementById('btnClearFilter').addEventListener('click', function(){
+  searchBox.value = '';
+  applyFilter();
+});
+document.getElementById('btnUncheckAll').addEventListener('click', function(){
+  if(!confirm('Bỏ tick trạng thái "đã liên hệ" cho tất cả các trạm?')) return;
+  state = {};
+  saveLocalState(state);
+  renderAllChecks();
+  updateStats();
+  pushRemote();
+});
+
+// ---------- modal cấu hình ----------
+var cfgModal = document.getElementById('cfgModal');
+function openCfgModal(){
+  document.getElementById('cfgUrl').value = cfg && cfg.url ? cfg.url : '';
+  document.getElementById('cfgToken').value = cfg && cfg.token ? cfg.token : '';
+  cfgModal.classList.add('open');
+}
+function closeCfgModal(){ cfgModal.classList.remove('open'); }
+document.getElementById('btnSyncCfg').addEventListener('click', openCfgModal);
+document.getElementById('btnSyncCfg2').addEventListener('click', openCfgModal);
+document.getElementById('cfgSkip').addEventListener('click', function(){
+  cfg = null;
+  saveCfg(null);
+  closeCfgModal();
+  setBadge('offline', '💾 Chỉ lưu trên máy này');
+});
+document.getElementById('cfgSave').addEventListener('click', function(){
+  var url = document.getElementById('cfgUrl').value.trim();
+  var token = document.getElementById('cfgToken').value.trim();
+  if(!url || !token){ alert('Vui lòng nhập đủ Worker URL và Token.'); return; }
+  cfg = { url: url, token: token };
+  saveCfg(cfg);
+  closeCfgModal();
+  pullRemote();
+});
+
+buildRows();
+updateStats();
+applyFilter();
+
+// Nếu chưa từng cấu hình đồng bộ, hiện gợi ý 1 lần
+if(!cfg){
+  setBadge('offline', '💾 Chỉ lưu trên máy này — bấm "Cấu hình đồng bộ" để dùng nhiều thiết bị');
+} else {
+  pullRemote();
+}
+</script>
+</body>
+</html>
