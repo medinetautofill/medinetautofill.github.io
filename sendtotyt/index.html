@@ -93,6 +93,20 @@ footer button.link{background:none;border:none;color:var(--teal-deep);text-decor
 .modal button{padding:9px 16px;border-radius:9px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
 .modal button.primary{background:var(--teal);border-color:var(--teal);color:#fff;}
 .modal button.primary:hover{opacity:.92;}
+
+/* ---------- modal tạo tin nhắn ---------- */
+.modal-overlay#msgModal .modal{max-width:640px;max-height:88vh;display:flex;flex-direction:column;}
+.msg-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:6px;}
+.msg-toolbar label{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;font-weight:600;}
+.msg-toolbar select{padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;}
+.msg-list{overflow-y:auto;flex:1;margin:14px 0;display:flex;flex-direction:column;gap:10px;padding-right:4px;}
+.msg-card{border:1.5px solid var(--line);border-radius:12px;padding:14px;background:#fbfdfc;position:relative;}
+.msg-card pre{white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13.5px;line-height:1.6;color:var(--ink);margin-bottom:10px;}
+.msg-card .msg-actions{display:flex;gap:8px;justify-content:flex-end;}
+.msg-card button{padding:6px 12px;font-size:12px;border-radius:8px;border:1.5px solid var(--line);background:#fff;font-family:inherit;font-weight:700;cursor:pointer;}
+.msg-card button.copy{border-color:var(--teal);color:var(--teal-deep);}
+.msg-card button.copy.copied{background:var(--teal);color:#fff;border-color:var(--teal);}
+.msg-card button.copy:hover{background:#eef7f2;}
 </style>
 </head>
 <body>
@@ -112,6 +126,7 @@ footer button.link{background:none;border:none;color:var(--teal-deep);text-decor
       <input type="search" id="searchBox" placeholder="Tìm tên trạm y tế…">
       <button id="btnClearFilter" type="button">Xóa tìm kiếm</button>
       <button id="btnUncheckAll" class="danger" type="button">Bỏ tick tất cả</button>
+      <button id="btnMsgGen" type="button">✍️ Tạo tin nhắn</button>
       <button id="btnSyncCfg" type="button">⚙️ Cấu hình đồng bộ</button>
     </div>
   </div>
@@ -136,6 +151,32 @@ footer button.link{background:none;border:none;color:var(--teal-deep);text-decor
   Trạng thái đồng bộ nhiều thiết bị qua Cloudflare. Nếu mất mạng, dữ liệu vẫn lưu tạm trên máy và tự đồng bộ lại khi có mạng.
   <br><button class="link" id="btnSyncCfg2" type="button">Thiết lập / đổi máy chủ đồng bộ</button>
 </footer>
+
+<!-- Modal tạo tin nhắn quảng cáo -->
+<div class="modal-overlay" id="msgModal">
+  <div class="modal">
+    <h2>✍️ Tạo tin nhắn gửi trạm y tế</h2>
+    <p>Mỗi lần bấm sẽ tạo ra các bản tin khác nhau về cách diễn đạt (để tránh gửi trùng lặp hàng loạt). Chọn cái ưng ý rồi bấm Copy để dán vào khung chat Facebook.</p>
+    <div class="msg-toolbar">
+      <label>Số lượng
+        <select id="msgCount">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+        </select>
+      </label>
+      <label>Tên trạm (tuỳ chọn)
+        <input type="text" id="msgStationName" placeholder="VD: Trạm Y tế phường Tân Định" style="margin:0;padding:7px 10px;width:220px;">
+      </label>
+      <button id="btnMsgRegen" class="primary" type="button" style="margin-left:auto;">🔄 Tạo tin nhắn mới</button>
+    </div>
+    <div class="msg-list" id="msgList"></div>
+    <div class="row">
+      <button id="msgClose" type="button">Đóng</button>
+    </div>
+  </div>
+</div>
 
 <!-- Modal nhập mật khẩu trước khi vào cấu hình đồng bộ -->
 <div class="modal-overlay" id="pwModal">
@@ -418,6 +459,173 @@ document.getElementById('cfgSave').addEventListener('click', function(){
   closeCfgModal();
   pullRemote();
 });
+
+// ---------- Trình tạo tin nhắn quảng cáo (nhiều bản diễn đạt khác nhau) ----------
+var LANDING_URL = 'https://medinetautofill.github.io/';
+var ZALO_PHONE = '0868.91.97.90';
+
+var MSG_GREETINGS = [
+  function(st){ return 'Chào ' + st + ' 👋'; },
+  function(st){ return 'Xin chào ' + st + ' ạ 👋'; },
+  function(st){ return 'Kính chào ' + st + ','; },
+  function(st){ return 'Chào anh/chị bên ' + st + ' ạ,'; },
+  function(st){ return 'Em xin phép làm phiền ' + st + ' một chút ạ.'; },
+  function(st){ return st + ' ơi, cho em xin chút thời gian ạ 🙏'; }
+];
+
+var MSG_INTROS = [
+  'Bên em có tiện ích trình duyệt Medinet Autofill, giúp điền tự động phiếu Khám sức khỏe (người lớn, trẻ em dưới 6 tuổi, lái xe) trên hệ thống quanlyskcd.medinet.org.vn.',
+  'Bên em đang giới thiệu công cụ Medinet Autofill — hỗ trợ điền tự động phiếu KSK (người lớn / trẻ em dưới 6 tuổi / lái xe) trên hệ thống Medinet.',
+  'Em xin giới thiệu Medinet Autofill, một tiện ích trình duyệt giúp tự động điền các mục lặp lại trong phiếu Khám sức khỏe trên hệ thống quanlyskcd.medinet.org.vn.',
+  'Bên em có làm một công cụ hỗ trợ điền phiếu KSK tự động (người lớn, trẻ em dưới 6 tuổi, lái xe) trên hệ thống Medinet, muốn giới thiệu đến Trạm.',
+  'Cho em hỏi hiện Trạm mình đang điền phiếu KSK trên hệ thống Medinet bằng cách gõ tay từng mục ạ? Bên em có công cụ Medinet Autofill giúp làm việc này tự động.'
+];
+
+var MSG_BENEFIT_SENTENCES = [
+  'nhanh gấp khoảng 10 lần so với gõ tay,',
+  'chỉ 1 cú bấm thay vì hàng chục thao tác chuột,',
+  'giúp giảm sai sót khi nhập liệu,',
+  'tiết kiệm thời gian đáng kể cho nhân viên trạm,',
+  'đỡ mỏi tay khi phải điền nhiều phiếu liên tục,'
+];
+
+var MSG_BENEFIT_LISTS = [
+  ['Tự động điền các mục lặp lại trong phiếu KSK người lớn / trẻ em dưới 6 tuổi / lái xe', 'Chỉ 1 cú bấm thay vì hàng chục thao tác chuột', 'Giảm sai sót khi nhập liệu, tiết kiệm giờ làm'],
+  ['Nhanh gấp ~10 lần so với điền tay từng mục', 'Hỗ trợ đầy đủ 3 loại phiếu: người lớn, trẻ em dưới 6 tuổi, lái xe', 'Hỗ trợ cài đặt từ xa miễn phí'],
+  ['Thao tác cực đơn giản, không cần rành công nghệ', 'Áp dụng được cho mọi loại phiếu KSK trên hệ thống Medinet', 'Dùng thử miễn phí trước khi quyết định mua']
+];
+
+var MSG_TRIAL_SENTENCES = [
+  'Trạm có thể dùng thử miễn phí khoảng 5–10 phiếu trước khi quyết định mua.',
+  'Trạm dùng thử miễn phí trước (5–10 phiếu) mà không cần thanh toán trước ạ.',
+  'Bên em cho dùng thử miễn phí 5–10 phiếu để Trạm trải nghiệm trước khi quyết định.',
+  'Có thể test miễn phí ~5–10 phiếu đầu tiên, ưng ý rồi mới cân nhắc mua ạ.'
+];
+
+var MSG_LINK_SENTENCES = [
+  '📖 Xem chi tiết & hướng dẫn tại: ' + LANDING_URL,
+  '📖 Thông tin đầy đủ, bảng giá, cách cài đặt: ' + LANDING_URL,
+  '📖 Trạm xem demo & thông tin tại trang: ' + LANDING_URL,
+  '📖 Chi tiết công cụ: ' + LANDING_URL
+];
+
+var MSG_CTAS = [
+  '📞 Anh/chị quan tâm nhắn Zalo giúp em: ' + ZALO_PHONE + ' để được tư vấn & hỗ trợ cài đặt miễn phí ạ.',
+  '📞 Trạm quan tâm liên hệ Zalo: ' + ZALO_PHONE + ', em hỗ trợ cài đặt từ xa miễn phí ạ.',
+  '📞 Cần hỗ trợ gì thêm anh/chị nhắn Zalo em: ' + ZALO_PHONE + ' ạ.',
+  '📞 Anh/chị inbox hoặc nhắn Zalo ' + ZALO_PHONE + ' để em gửi hướng dẫn dùng thử ạ.'
+];
+
+var MSG_SIGNOFFS = [
+  'Cảm ơn Trạm đã dành thời gian đọc tin nhắn ạ! 🙏',
+  'Em cảm ơn và mong được hỗ trợ Trạm ạ!',
+  'Rất mong được đồng hành hỗ trợ Trạm trong công việc hàng ngày ạ.',
+  'Em xin cảm ơn Trạm nhiều ạ 🙏',
+  ''
+];
+
+function pickRandom(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffleCopy(arr){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function generateOneMessage(stationName){
+  var st = stationName && stationName.trim() ? stationName.trim() : 'Trạm Y tế';
+  var greeting = pickRandom(MSG_GREETINGS)(st);
+  var intro = pickRandom(MSG_INTROS);
+  var useList = Math.random() < 0.5;
+  var body;
+  if(useList){
+    var list = pickRandom(MSG_BENEFIT_LISTS);
+    body = list.map(function(x){ return '✅ ' + x; }).join('\n');
+  } else {
+    var picks = shuffleCopy(MSG_BENEFIT_SENTENCES).slice(0, 2 + Math.floor(Math.random()*2));
+    body = 'Công cụ giúp ' + picks.join(' ').replace(/,\s*$/, '.') ;
+  }
+  var trial = pickRandom(MSG_TRIAL_SENTENCES);
+  var link = pickRandom(MSG_LINK_SENTENCES);
+  var cta = pickRandom(MSG_CTAS);
+  var signoff = pickRandom(MSG_SIGNOFFS);
+
+  var parts = [greeting, intro, body, trial, link, cta];
+  if(signoff) parts.push(signoff);
+  return parts.filter(Boolean).join('\n\n');
+}
+
+var msgModal = document.getElementById('msgModal');
+var msgListEl = document.getElementById('msgList');
+var msgCountSel = document.getElementById('msgCount');
+var msgStationInput = document.getElementById('msgStationName');
+
+function renderMessages(){
+  var count = parseInt(msgCountSel.value, 10) || 10;
+  var stationName = msgStationInput.value;
+  var seen = {};
+  var texts = [];
+  var attempts = 0;
+  while(texts.length < count && attempts < count * 8){
+    attempts++;
+    var t = generateOneMessage(stationName);
+    if(!seen[t]){ seen[t] = true; texts.push(t); }
+  }
+  msgListEl.innerHTML = '';
+  texts.forEach(function(text, idx){
+    var card = document.createElement('div');
+    card.className = 'msg-card';
+    var pre = document.createElement('pre');
+    pre.textContent = text;
+    var actions = document.createElement('div');
+    actions.className = 'msg-actions';
+    var btn = document.createElement('button');
+    btn.className = 'copy';
+    btn.type = 'button';
+    btn.textContent = '📋 Copy';
+    btn.addEventListener('click', function(){
+      var doCopy = function(){
+        btn.textContent = '✅ Đã copy';
+        btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = '📋 Copy'; btn.classList.remove('copied'); }, 1500);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(doCopy).catch(function(){
+          fallbackCopy(text); doCopy();
+        });
+      } else {
+        fallbackCopy(text); doCopy();
+      }
+    });
+    actions.appendChild(btn);
+    card.appendChild(pre);
+    card.appendChild(actions);
+    msgListEl.appendChild(card);
+  });
+}
+
+function fallbackCopy(text){
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(ta);
+}
+
+document.getElementById('btnMsgGen').addEventListener('click', function(){
+  msgModal.classList.add('open');
+  renderMessages();
+});
+document.getElementById('msgClose').addEventListener('click', function(){
+  msgModal.classList.remove('open');
+});
+document.getElementById('btnMsgRegen').addEventListener('click', renderMessages);
+msgCountSel.addEventListener('change', renderMessages);
 
 buildRows();
 updateStats();
