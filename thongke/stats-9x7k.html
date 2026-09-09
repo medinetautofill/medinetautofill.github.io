@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Thống kê truy cập</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Manrope',sans-serif;background:#f4f7f5;color:#0b1f2b;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+  .box{background:#fff;border:1px solid #dbe4df;border-radius:16px;padding:32px;max-width:480px;width:100%;box-shadow:0 20px 40px -20px rgba(11,31,43,.2);}
+  h1{font-size:20px;margin-bottom:20px;}
+  input{width:100%;padding:12px 14px;border:1.5px solid #dbe4df;border-radius:10px;font-size:15px;margin-bottom:12px;}
+  button{width:100%;padding:12px;border:none;border-radius:10px;background:#0f6659;color:#fff;font-weight:700;font-size:15px;cursor:pointer;}
+  button:hover{opacity:.9;}
+  .err{color:#b3453a;font-size:13px;margin-bottom:10px;display:none;}
+  .stats{display:none;}
+  .total{font-size:36px;font-weight:800;margin:16px 0 4px;}
+  .label{font-size:13px;color:#5c6b66;margin-bottom:20px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{text-align:left;padding:8px 4px;border-top:1px solid #dbe4df;}
+  th{color:#5c6b66;font-weight:600;}
+  .loading{display:none;font-size:14px;color:#5c6b66;}
+</style>
+</head>
+<body>
+  <div class="box">
+    <div id="loginView">
+      <h1>🔒 Thống kê truy cập</h1>
+      <div class="err" id="errMsg"></div>
+      <input type="password" id="pinInput" placeholder="Nhập mật khẩu" autocomplete="off">
+      <button onclick="loadStats()">Xem thống kê</button>
+      <div class="loading" id="loadingMsg">Đang tải...</div>
+    </div>
+    <div class="stats" id="statsView">
+      <h1>📈 Thống kê 30 ngày gần nhất</h1>
+      <div class="total" id="totalNum">…</div>
+      <div class="label">Tổng lượt xem trang</div>
+      <table>
+        <thead><tr><th>Ngày</th><th>Lượt xem</th></tr></thead>
+        <tbody id="dailyBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Doi URL nay thanh URL worker thuc te sau khi deploy xong.
+    var WORKER_URL = 'https://medinet-stats.dha-medinet.workers.dev';
+
+    function loadStats() {
+      var pin = document.getElementById('pinInput').value.trim();
+      var errEl = document.getElementById('errMsg');
+      var loadingEl = document.getElementById('loadingMsg');
+      errEl.style.display = 'none';
+      loadingEl.style.display = 'block';
+
+      fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pin: pin })
+      })
+      .then(function(res) { return res.json().then(function(data){ return {ok: res.ok, data: data}; }); })
+      .then(function(result) {
+        loadingEl.style.display = 'none';
+        if (!result.ok) {
+          errEl.textContent = result.data.error || 'Có lỗi xảy ra';
+          errEl.style.display = 'block';
+          return;
+        }
+        renderStats(result.data);
+      })
+      .catch(function(err) {
+        loadingEl.style.display = 'none';
+        errEl.textContent = 'Không kết nối được máy chủ thống kê';
+        errEl.style.display = 'block';
+      });
+    }
+
+    function renderStats(data) {
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('statsView').style.display = 'block';
+      document.getElementById('totalNum').textContent = data.total.toLocaleString('vi-VN');
+
+      var tbody = document.getElementById('dailyBody');
+      tbody.innerHTML = '';
+      var sorted = (data.daily || []).slice().sort(function(a,b){ return a.date < b.date ? 1 : -1; });
+      sorted.forEach(function(row) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td>' + row.date + '</td><td>' + row.views.toLocaleString('vi-VN') + '</td>';
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Cho phep bam Enter de submit
+    document.getElementById('pinInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') loadStats();
+    });
+  </script>
+</body>
+</html>
