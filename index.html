@@ -377,7 +377,7 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
 
 <header class="top">
   <div class="topbar">
-    <div class="brand"><span class="dot"></span> Medinet Autofill</div>
+    <div class="brand" id="brandLogo" style="cursor:pointer;user-select:none;"><span class="dot"></span> Medinet Autofill</div>
     <nav class="topnav">
       <a href="#tinh-nang">Tính năng</a>
       <a href="#gia">Bảng giá</a>
@@ -973,6 +973,74 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
   render();
   // Kiem tra lai moi gio de tu tang khi qua moc 00:00 ma khong can tai lai trang.
   setInterval(render, 60 * 60 * 1000);
+})();
+</script>
+
+<script>
+// ================================================================
+// Nhan giu (long-press) ~3s vao logo/tieu de o goc tren trai de mo
+// trang noi bo "Danh sach lien he cac TYT" (sendtotyt). Ho tro ca
+// chuot (mousedown/mouseup/mouseleave) va cham (touchstart/touchend/
+// touchcancel/touchmove huy khi keo tay ra ngoai qua xa).
+// ================================================================
+(function () {
+  var HOLD_MS = 3000;
+  var TARGET_URL = 'https://medinetautofill.github.io/sendtotyt';
+  var el = document.getElementById('brandLogo');
+  if (!el) return;
+
+  var timer = null;
+  var startX = 0, startY = 0;
+  var MOVE_TOLERANCE = 18;
+
+  function clearTimer() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    el.style.opacity = '';
+  }
+
+  function startHold(x, y) {
+    clearTimer();
+    startX = x; startY = y;
+    el.style.transition = 'opacity .2s';
+    timer = setTimeout(function () {
+      el.style.opacity = '';
+      window.open(TARGET_URL, '_blank', 'noopener');
+      timer = null;
+    }, HOLD_MS);
+    // Phan hoi thi giac nhe trong luc giu (mo dan)
+    requestAnimationFrame(function fade() {
+      if (!timer) return;
+      el.style.opacity = '0.55';
+    });
+  }
+
+  function moveCheck(x, y) {
+    if (!timer) return;
+    if (Math.abs(x - startX) > MOVE_TOLERANCE || Math.abs(y - startY) > MOVE_TOLERANCE) {
+      clearTimer();
+    }
+  }
+
+  // Chuot
+  el.addEventListener('mousedown', function (e) { startHold(e.clientX, e.clientY); });
+  el.addEventListener('mousemove', function (e) { moveCheck(e.clientX, e.clientY); });
+  el.addEventListener('mouseup', clearTimer);
+  el.addEventListener('mouseleave', clearTimer);
+
+  // Cam ung
+  el.addEventListener('touchstart', function (e) {
+    var t = e.touches[0];
+    startHold(t.clientX, t.clientY);
+  }, { passive: true });
+  el.addEventListener('touchmove', function (e) {
+    var t = e.touches[0];
+    moveCheck(t.clientX, t.clientY);
+  }, { passive: true });
+  el.addEventListener('touchend', clearTimer);
+  el.addEventListener('touchcancel', clearTimer);
+
+  // Ngan menu chuot phai / bôi den van ban khi giu lau
+  el.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 })();
 </script>
 
