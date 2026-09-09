@@ -230,7 +230,20 @@ function saveCfg(cfg){
 }
 
 var state = loadLocalState();
+// Cấu hình đồng bộ mặc định (gắn sẵn) — mọi thiết bị mở trang lần đầu sẽ
+// tự dùng cấu hình này để đồng bộ ngay, không cần nhập tay. Nếu muốn đổi
+// URL/Token khác, dùng nút "Cấu hình đồng bộ" (mật khẩu 0000) để ghi đè —
+// giá trị đã tự nhập sẽ được ưu tiên hơn giá trị mặc định này.
+var DEFAULT_CFG = {
+  url: 'https://tyt-sync.dha-medinet.workers.dev',
+  token: 'tyt-hcm-2026-xyz'
+};
+
 var cfg = loadCfg();
+if(!cfg && DEFAULT_CFG.url && DEFAULT_CFG.token){
+  cfg = DEFAULT_CFG;
+  saveCfg(cfg);
+}
 var syncBadge = document.getElementById('syncBadge');
 var pendingSave = null;
 
