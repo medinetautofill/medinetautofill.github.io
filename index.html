@@ -399,13 +399,39 @@ footer{border-top:1px solid var(--line);padding:40px 0;}
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <div class="eyebrow notice-blink" style="background:#fff4e5;color:#a15c00;border:1px solid #f3cd8a;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;display:block;line-height:1.5;">⚠️ Chú ý: Công cụ chỉ hỗ trợ nhập liệu KSK cho trang <a href="https://quanlyskcd.medinet.org.vn/" target="_blank" rel="noopener" style="color:#a15c00;text-decoration:underline;">quanlyskcd.medinet.org.vn</a> thuộc quản lý của Sở Y Tế TP. Hồ Chí Minh</div>
+      <div class="notice-neon-wrap">
+        <div class="eyebrow" style="background:#fff4e5;color:#a15c00;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;display:block;line-height:1.5;">⚠️ Chú ý: Công cụ chỉ hỗ trợ nhập liệu KSK cho trang <a href="https://quanlyskcd.medinet.org.vn/" target="_blank" rel="noopener" style="color:#a15c00;text-decoration:underline;">quanlyskcd.medinet.org.vn</a> thuộc quản lý của Sở Y Tế TP. Hồ Chí Minh</div>
+      </div>
       <style>
-        @keyframes noticeBlink {
-          0%, 100% { opacity: 1; box-shadow: 0 0 0 rgba(241,180,76,0); }
-          50% { opacity: .55; box-shadow: 0 0 14px rgba(241,180,76,.6); }
+        @property --neon-angle {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
         }
-        .notice-blink { animation: noticeBlink 1.6s ease-in-out infinite; }
+        .notice-neon-wrap {
+          position: relative;
+          border-radius: 12px;
+          padding: 2px;
+          --neon-angle: 0deg;
+          background: conic-gradient(from var(--neon-angle), #ff9d00, #ffe08a, #ff9d00 20%, transparent 35%, transparent 65%, #ff9d00 80%);
+          animation: neonSpin 1.8s linear infinite;
+        }
+        .notice-neon-wrap::after {
+          content: '';
+          position: absolute;
+          inset: -4px;
+          border-radius: 14px;
+          background: inherit;
+          filter: blur(8px);
+          opacity: .8;
+          z-index: -1;
+        }
+        .notice-neon-wrap > .eyebrow {
+          border-radius: 10px;
+        }
+        @keyframes neonSpin {
+          to { --neon-angle: 360deg; }
+        }
       </style>
       <h1>Điền phiếu khám sức khoẻ <em>nhanh gấp 10 lần</em>, không cần gõ tay</h1>
       <p class="lead">Tiện ích trình duyệt giúp nhân viên y tế điền tự động các mục lặp lại trong phiếu KSK người lớn, trẻ em dưới 6 tuổi và KSK lái xe — chỉ 1 cú bấm cho mỗi mục thay vì hàng chục thao tác chuột.</p>
