@@ -63,7 +63,7 @@
       .then(function(result) {
         loadingEl.style.display = 'none';
         if (!result.ok) {
-          errEl.textContent = result.data.error || 'Có lỗi xảy ra';
+          errEl.textContent = (result.data.error || 'Có lỗi xảy ra') + (result.data.detail ? (': ' + result.data.detail) : '');
           errEl.style.display = 'block';
           return;
         }
